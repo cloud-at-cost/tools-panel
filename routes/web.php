@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\MinerController;
+use App\Http\Controllers\PayoutsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,5 +33,16 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group([
     'middleware' => ['auth:sanctum', 'verified']
 ], function() {
-    Route::resource('miners', \App\Http\Controllers\MinerController::class);
+    Route::resource('miners', MinerController::class);
+
+    Route::group([
+        'prefix' => 'payouts'
+    ], function() {
+        Route::get('', [PayoutsController::class, 'index'])
+            ->name('payouts.index');
+        Route::get('create', [PayoutsController::class, 'create'])
+            ->name('payouts.create');
+        Route::post('create', [PayoutsController::class, 'store'])
+            ->name('payouts.store');
+    });
 });

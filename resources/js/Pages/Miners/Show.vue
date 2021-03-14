@@ -38,7 +38,7 @@
     </template>
 
     <ul>
-      <li><strong>Identifier</strong>: {{ miner.identifier }}</li>
+      <li><strong>Identifier (PackageID)</strong>: {{ miner.identifier }}</li>
       <li><strong>Amount Paid</strong>: {{ miner.amount_paid }}</li>
       <li><strong>Type</strong>: {{ miner.type.name }}</li>
     </ul>
