@@ -38,7 +38,8 @@
     </template>
 
     <ul>
-      <li><strong>Identifier (PackageID)</strong>: {{ miner.identifier }}</li>
+      <li><strong>Miner ID</strong>: {{ miner.miner_id }}</li>
+      <li><strong>Package ID</strong>: {{ miner.identifier }}</li>
       <li><strong>Amount Paid</strong>: {{ miner.amount_paid }}</li>
       <li><strong>Type</strong>: {{ miner.type.name }}</li>
     </ul>
@@ -66,7 +67,7 @@
             scope="col"
             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            Amount
+            Amount (BTC)
           </th>
         </tr>
       </thead>
@@ -83,10 +84,10 @@
             {{ payout.type }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {{ payout.date }}
+            {{ formatDate(payout.date) }} {{ formatTime(payout.date) }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {{ miner.amount }}
+            {{ payout.amount }}
           </td>
         </tr>
         <tr v-if="recentPayouts.length === 0">
@@ -106,12 +107,18 @@
           }"
         >
           <td
-            colspan="5"
-            class="text-center px-6 py-4 w"
+            colspan="3"
+            class="text-center px-6 py-4 w-100"
           >
-            <inertia-link :href="route('miners.create')">
-              Report Earnings
-            </inertia-link>
+            <div class="grid grid-cols-2">
+              <inertia-link :href="route('payouts.create')">
+                Report Earnings
+              </inertia-link>
+
+              <inertia-link :href="route('payouts.index')">
+                View All Payouts
+              </inertia-link>
+            </div>
           </td>
         </tr>
       </tfoot>
@@ -137,5 +144,23 @@
                 required: true,
             }
         },
+
+        methods: {
+            formatDate(date) {
+                const dateInfo = new Date(date);
+                return `${dateInfo.getFullYear()}-${this.pad(dateInfo.getMonth(), 2, '0')}-${this.pad(dateInfo.getDate(), 2, '0')}`
+            },
+
+            formatTime(date) {
+                const dateInfo = new Date(date);
+                return `${this.pad(dateInfo.getHours(), 2, '0')}:${this.pad(dateInfo.getMinutes(), 2, '0')}:${this.pad(dateInfo.getSeconds(), 2, '0')}`;
+            },
+
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            }
+        }
     }
 </script>

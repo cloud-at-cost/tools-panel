@@ -75,7 +75,26 @@
         <div class="col-span-6 sm:col-span-4">
           <jet-label
             for="identifier"
-            value="Identifier (PackageID)"
+            value="Miner ID"
+          />
+          <jet-input
+            id="miner_id"
+            ref="miner_id"
+            v-model="form.miner_id"
+            type="text"
+            class="mt-1 block w-full"
+            required
+          />
+          <jet-input-error
+            :message="form.errors.miner_id"
+            class="mt-2"
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-4">
+          <jet-label
+            for="identifier"
+            value="Package ID"
           />
           <jet-input
             id="identifier"
@@ -160,6 +179,7 @@
             return {
                 form: this.$inertia.form({
                     type: undefined,
+                    miner_id: '',
                     identifier: '',
                     amount_paid: 0,
                 }),
@@ -168,7 +188,7 @@
 
         computed: {
             canSubmit() {
-                return this.form.identifier && this.form.amount_paid;
+                return this.form.identifier && this.form.amount_paid && this.form.miner_id;
             }
         },
 
