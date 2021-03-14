@@ -3,7 +3,7 @@
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="lg:hidden">
       <div
-        v-if="!isOpen"
+        v-if="isOpen"
         class="fixed inset-0 flex z-40"
       >
         <!--
@@ -83,6 +83,14 @@
             <div class="mt-5 flex-1 h-0 overflow-y-auto">
               <nav class="px-2">
                 <div class="space-y-1">
+                  <span class="text-white px-2 py-2 text-sm font-medium w-full">
+                    <img
+                      class="h-8 w-8 rounded-full object-cover inline"
+                      :src="$page.props.user.profile_photo_url"
+                      :alt="$page.props.user.name"
+                    >
+                    {{ $page.props.user.name }}
+                  </span>
                   <!--
                                 Current: "bg-gray-900 text-white",
                                 Default: "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -153,6 +161,42 @@
                     </svg>
                     Report Earnings
                   </jet-nav-link>
+
+                  <div class="border-t border-gray-100" />
+
+                  <jet-nav-link
+                    :href="route('profile.show')"
+                    :active="route().current('profile.show')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      class="text-gray-400 group-hover:text-gray-300 mr-3 h-6 w-6"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Profile
+                  </jet-nav-link>
+
+                  <jet-nav-link
+                    v-if="$page.props.jetstream.hasApiFeatures"
+                    :href="route('api-tokens.index')"
+                  >
+                    API Tokens
+                  </jet-nav-link>
+
+
+                  <!-- Authentication -->
+                  <form @submit.prevent="logout">
+                    <jet-nav-link as="button">
+                      Log Out
+                    </jet-nav-link>
+                  </form>
                 </div>
               </nav>
             </div>
@@ -178,10 +222,19 @@
           <div class="flex-1 flex flex-col overflow-y-auto">
             <nav class="flex-1 px-2 py-4 bg-gray-800">
               <div class="space-y-1">
+                <span class="text-white px-2 py-2 text-sm font-medium w-full">
+                  <img
+                    class="h-8 w-8 rounded-full object-cover inline"
+                    :src="$page.props.user.profile_photo_url"
+                    :alt="$page.props.user.name"
+                  >
+                  {{ $page.props.user.name }}
+                </span>
+
                 <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
                 <jet-nav-link
                   :href="route('dashboard')"
-                  class="bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                  :active="route().current('dashboard')"
                 >
                   <!-- Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300" -->
                   <!-- Heroicon name: outline/home -->
@@ -228,7 +281,6 @@
 
                 <jet-nav-link
                   href="#"
-                  class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                 >
                   <!-- Heroicon name: outline/user-circle -->
                   <svg
@@ -245,6 +297,43 @@
                   </svg>
                   Report Earnings
                 </jet-nav-link>
+
+
+                <div class="border-t border-gray-100" />
+
+                <jet-nav-link
+                  :href="route('profile.show')"
+                  :active="route().current('profile.show')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    class="text-gray-400 group-hover:text-gray-300 mr-3 h-6 w-6"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Profile
+                </jet-nav-link>
+
+                <jet-nav-link
+                  v-if="$page.props.jetstream.hasApiFeatures"
+                  :href="route('api-tokens.index')"
+                >
+                  API Tokens
+                </jet-nav-link>
+
+
+                <!-- Authentication -->
+                <form @submit.prevent="logout">
+                  <jet-nav-link as="button">
+                    Log Out
+                  </jet-nav-link>
+                </form>
               </div>
             </nav>
           </div>
@@ -284,7 +373,20 @@
       >
         <div class="py-8 xl:py-10">
           <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-5xl xl:grid xl:grid-cols-3">
-            Content Here
+            <!-- Page Heading -->
+            <header
+              v-if="$slots.header"
+              class="bg-white shadow"
+            >
+              <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <slot name="header" />
+              </div>
+            </header>
+
+            <!-- Page Content -->
+            <main>
+              <slot />
+            </main>
           </div>
         </div>
       </main>
@@ -305,7 +407,7 @@
         data() {
             return {
                 showingNavigationDropdown: false,
-                isOpen: true
+                isOpen: false
             }
         },
 
