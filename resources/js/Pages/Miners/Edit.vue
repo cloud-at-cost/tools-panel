@@ -1,7 +1,6 @@
 <template>
   <app-layout>
     <template #header>
-      <!-- This example requires Tailwind CSS v2.0+ -->
       <nav
         class="flex"
         aria-label="Breadcrumb"
@@ -76,7 +75,7 @@
         <div class="col-span-6 sm:col-span-4">
           <jet-label
             for="identifier"
-            value="Identifier"
+            value="Identifier (PackageID)"
           />
           <jet-input
             id="identifier"
@@ -95,7 +94,7 @@
         <div class="col-span-6 sm:col-span-4">
           <jet-label
             for="amount_paid"
-            value="Amount Paid"
+            value="Amount Paid (USD)"
           />
           <jet-input
             id="amount_paid"
@@ -137,7 +136,7 @@
     import JetInput from '@/Jetstream/Input'
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
-    import AppLayout from "../../Layouts/AppLayout";
+    import AppLayout from "@/Layouts/AppLayout";
 
     export default {
         components: {

@@ -39,6 +39,7 @@
         components: {
             JetSectionTitle,
         },
+
         emits: ['submitted'],
 
         computed: {

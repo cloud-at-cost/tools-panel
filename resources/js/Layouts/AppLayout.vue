@@ -6,16 +6,6 @@
         v-if="isOpen"
         class="fixed inset-0 flex z-40"
       >
-        <!--
-                  Off-canvas menu overlay, show/hide based on off-canvas menu state.
-
-                  Entering: "transition-opacity ease-linear duration-300"
-                    From: "opacity-0"
-                    To: "opacity-100"
-                  Leaving: "transition-opacity ease-linear duration-300"
-                    From: "opacity-100"
-                    To: "opacity-0"
-                -->
         <transition
           enter-active-class="transition-opacity ease-linear duration-300"
           enter-class="opacity-0"
@@ -143,8 +133,7 @@
                   </jet-nav-link>
 
                   <jet-nav-link
-                    href="#"
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    :href="route('payouts.index')"
                   >
                     <!-- Heroicon name: outline/user-circle -->
                     <svg
@@ -159,7 +148,7 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                    Report Earnings
+                    Payouts
                   </jet-nav-link>
 
                   <div class="border-t border-gray-100" />
@@ -286,7 +275,7 @@
                 </jet-nav-link>
 
                 <jet-nav-link
-                  href="#"
+                  :href="route('payouts.index')"
                 >
                   <!-- Heroicon name: outline/user-circle -->
                   <svg
@@ -301,7 +290,7 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  Report Earnings
+                  Payouts
                 </jet-nav-link>
 
 
