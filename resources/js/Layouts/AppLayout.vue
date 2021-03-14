@@ -120,8 +120,8 @@
                   </jet-nav-link>
 
                   <jet-nav-link
-                    href="#"
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    :href="route('miners.index')"
+                    :active="route().current('miners.index')"
                   >
                     <!-- Heroicon name: outline/view-list -->
                     <svg
@@ -192,8 +192,14 @@
 
 
                   <!-- Authentication -->
-                  <form @submit.prevent="logout">
-                    <jet-nav-link as="button">
+                  <form
+                    method="post"
+                    @submit.prevent="logout"
+                  >
+                    <jet-nav-link
+                      :href="route('logout')"
+                      as="button"
+                    >
                       Log Out
                     </jet-nav-link>
                   </form>
@@ -257,8 +263,8 @@
                 </jet-nav-link>
 
                 <jet-nav-link
-                  href="#"
-                  class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                  :href="route('miners.index')"
+                  :active="route().current('miners.index')"
                 >
                   <!-- Heroicon name: outline/view-list -->
                   <svg
@@ -329,8 +335,14 @@
 
 
                 <!-- Authentication -->
-                <form @submit.prevent="logout">
-                  <jet-nav-link as="button">
+                <form
+                  method="post"
+                  @submit.prevent="logout"
+                >
+                  <jet-nav-link
+                    :href="route('logout')"
+                    as="button"
+                  >
                     Log Out
                   </jet-nav-link>
                 </form>
@@ -385,7 +397,11 @@
 
             <!-- Page Content -->
             <main>
-              <slot />
+              <div class="py-12">
+                <div class="mx-auto">
+                  <slot />
+                </div>
+              </div>
             </main>
           </div>
         </div>

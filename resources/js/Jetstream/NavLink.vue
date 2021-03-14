@@ -1,15 +1,23 @@
 <template>
   <inertia-link
+    v-if="as !== 'button'"
     :href="href"
     :class="classes"
   >
     <slot />
   </inertia-link>
+  <button
+    v-if="as === 'button'"
+    type="submit"
+    :class="classes"
+  >
+    <slot />
+  </button>
 </template>
 
 <script>
     export default {
-        props: ['href', 'active'],
+        props: ['href', 'active', 'as'],
 
         computed: {
             classes() {
