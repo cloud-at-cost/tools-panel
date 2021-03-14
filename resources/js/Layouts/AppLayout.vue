@@ -87,9 +87,9 @@
                                 Current: "bg-gray-900 text-white",
                                 Default: "text-gray-300 hover:bg-gray-700 hover:text-white"
                                 -->
-                  <a
+                  <jet-nav-link
                     :href="route('dashboard')"
-                    class="bg-gray-900 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    :active="route().current('dashboard')"
                   >
                     <!-- Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300" -->
                     <!-- Heroicon name: outline/home -->
@@ -109,9 +109,9 @@
                       />
                     </svg>
                     Dashboard
-                  </a>
+                  </jet-nav-link>
 
-                  <a
+                  <jet-nav-link
                     href="#"
                     class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
                   >
@@ -132,9 +132,9 @@
                       />
                     </svg>
                     My Miners
-                  </a>
+                  </jet-nav-link>
 
-                  <a
+                  <jet-nav-link
                     href="#"
                     class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
                   >
@@ -152,7 +152,7 @@
                       />
                     </svg>
                     Report Earnings
-                  </a>
+                  </jet-nav-link>
                 </div>
               </nav>
             </div>
@@ -179,8 +179,8 @@
             <nav class="flex-1 px-2 py-4 bg-gray-800">
               <div class="space-y-1">
                 <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
-                <a
-                  href="#"
+                <jet-nav-link
+                  :href="route('dashboard')"
                   class="bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                 >
                   <!-- Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300" -->
@@ -201,9 +201,9 @@
                     />
                   </svg>
                   Dashboard
-                </a>
+                </jet-nav-link>
 
-                <a
+                <jet-nav-link
                   href="#"
                   class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                 >
@@ -224,9 +224,9 @@
                     />
                   </svg>
                   My Miners
-                </a>
+                </jet-nav-link>
 
-                <a
+                <jet-nav-link
                   href="#"
                   class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                 >
@@ -244,7 +244,7 @@
                     />
                   </svg>
                   Report Earnings
-                </a>
+                </jet-nav-link>
               </div>
             </nav>
           </div>
@@ -294,10 +294,12 @@
 
 <script>
     import ApplicationLogo from "@/Jetstream/ApplicationLogo";
+    import JetNavLink from "@/Jetstream/NavLink";
 
     export default {
         components: {
             ApplicationLogo,
+            JetNavLink
         },
 
         data() {
