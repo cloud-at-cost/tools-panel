@@ -8,7 +8,7 @@
         <ol class="flex items-center space-x-4">
           <li>
             <div>
-              <inertia-link :href="route('miners.index')">
+              <inertia-link :href="route('payouts.index')">
                 Payouts
               </inertia-link>
             </div>
