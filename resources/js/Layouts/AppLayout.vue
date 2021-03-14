@@ -1,232 +1,538 @@
 <template>
-    <div>
-        <jet-banner />
+    <div class="h-screen flex overflow-hidden bg-white">
+        <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+        <div class="lg:hidden">
+            <div class="fixed inset-0 flex z-40" v-if="!isOpen">
+                <!--
+                  Off-canvas menu overlay, show/hide based on off-canvas menu state.
 
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
-                <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex-shrink-0 flex items-center">
-                                <inertia-link :href="route('dashboard')">
-                                    <jet-application-mark class="block h-9 w-auto" />
-                                </inertia-link>
-                            </div>
+                  Entering: "transition-opacity ease-linear duration-300"
+                    From: "opacity-0"
+                    To: "opacity-100"
+                  Leaving: "transition-opacity ease-linear duration-300"
+                    From: "opacity-100"
+                    To: "opacity-0"
+                -->
+                <transition
+                    enter-active-class="transition-opacity ease-linear duration-300"
+                    enter-class="opacity-0"
+                    enter-to-class="opacity-100"
+                    leave-active-class="transition-opacity ease-linear duration-300"
+                    leave-class="opacity-100"
+                    leave-to-class="opacity-0"
+                >
+                    <div class="fixed inset-0" aria-hidden="true">
+                        <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
+                    </div>
+                </transition>
+                <!--
+                  Off-canvas menu, show/hide based on off-canvas menu state.
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                  Entering: "transition ease-in-out duration-300 transform"
+                    From: "-translate-x-full"
+                    To: "translate-x-0"
+                  Leaving: "transition ease-in-out duration-300 transform"
+                    From: "translate-x-0"
+                    To: "-translate-x-full"
+                -->
+                <transition
+                    enter-active-class="transition ease-in-out duration-300 transform"
+                    enter-class="-translate-x-full"
+                    enter-to-class="translate-x-0"
+                    leave-active-class="transition ease-in-out duration-300 transform"
+                    leave-class="translate-x-0"
+                    leave-to-class="-translate-x-full"
+                >
+                <div
+                    class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-gray-800"
+                >
+                    <div class="absolute top-0 right-0 -mr-12 pt-2">
+                        <button
+                            type="button"
+                            class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                            @click="isOpen = !isOpen"
+                        >
+                            <span class="sr-only">Close sidebar</span>
+                            <!-- Heroicon name: outline/x -->
+                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex-shrink-0 flex items-center px-4">
+                        <application-logo />
+                    </div>
+                    <div class="mt-5 flex-1 h-0 overflow-y-auto">
+                        <nav class="px-2">
+                            <div class="space-y-1">
+                                <!--
+                                Current: "bg-gray-900 text-white",
+                                Default: "text-gray-300 hover:bg-gray-700 hover:text-white"
+                                -->
+                                <a
+                                    :href="route('dashboard')"
+                                    class="bg-gray-900 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                                >
+                                    <!-- Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300" -->
+                                    <!-- Heroicon name: outline/home -->
+                                    <svg class="text-gray-300 mr-4 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
                                     Dashboard
-                                </jet-nav-link>
+                                </a>
+
+                                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                                    <!-- Heroicon name: outline/view-list -->
+                                    <svg class="text-gray-400 group-hover:text-gray-300 mr-4 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                    </svg>
+                                    My Miners
+                                </a>
+
+                                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                                    <!-- Heroicon name: outline/user-circle -->
+                                    <svg class="text-gray-400 group-hover:text-gray-300 mr-4 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Report Earnings
+                                </a>
                             </div>
-                        </div>
-
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <div class="ml-3 relative">
-                                <!-- Teams Dropdown -->
-                                <jet-dropdown align="right" width="60" v-if="$page.props.jetstream.hasTeamFeatures">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                                {{ $page.props.user.current_team.name }}
-
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <div class="w-60">
-                                            <!-- Team Management -->
-                                            <template v-if="$page.props.jetstream.hasTeamFeatures">
-                                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Manage Team
-                                                </div>
-
-                                                <!-- Team Settings -->
-                                                <jet-dropdown-link :href="route('teams.show', $page.props.user.current_team)">
-                                                    Team Settings
-                                                </jet-dropdown-link>
-
-                                                <jet-dropdown-link :href="route('teams.create')" v-if="$page.props.jetstream.canCreateTeams">
-                                                    Create New Team
-                                                </jet-dropdown-link>
-
-                                                <div class="border-t border-gray-100"></div>
-
-                                                <!-- Team Switcher -->
-                                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Switch Teams
-                                                </div>
-
-                                                <template v-for="team in $page.props.user.all_teams" :key="team.id">
-                                                    <form @submit.prevent="switchToTeam(team)">
-                                                        <jet-dropdown-link as="button">
-                                                            <div class="flex items-center">
-                                                                <svg v-if="team.id == $page.props.user.current_team_id" class="mr-2 h-5 w-5 text-green-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                                <div>{{ team.name }}</div>
-                                                            </div>
-                                                        </jet-dropdown-link>
-                                                    </form>
-                                                </template>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </jet-dropdown>
-                            </div>
-
-                            <!-- Settings Dropdown -->
-                            <div class="ml-3 relative">
-                                <jet-dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
-                                            <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
-                                        </button>
-
-                                        <span v-else class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                {{ $page.props.user.name }}
-
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
-                                        </div>
-
-                                        <jet-dropdown-link :href="route('profile.show')">
-                                            Profile
-                                        </jet-dropdown-link>
-
-                                        <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
-                                            API Tokens
-                                        </jet-dropdown-link>
-
-                                        <div class="border-t border-gray-100"></div>
-
-                                        <!-- Authentication -->
-                                        <form @submit.prevent="logout">
-                                            <jet-dropdown-link as="button">
-                                                Log Out
-                                            </jet-dropdown-link>
-                                        </form>
-                                    </template>
-                                </jet-dropdown>
-                            </div>
-                        </div>
-
-                        <!-- Hamburger -->
-                        <div class="-mr-2 flex items-center sm:hidden">
-                            <button @click="showingNavigationDropdown = ! showingNavigationDropdown" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    <path :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+                        </nav>
                     </div>
                 </div>
+                </transition>
+                <div class="flex-shrink-0 w-14" aria-hidden="true">
+                    <!-- Dummy element to force sidebar to shrink to fit close icon -->
+                </div>
+            </div>
+        </div>
 
-                <!-- Responsive Navigation Menu -->
-                <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
-                    <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </jet-responsive-nav-link>
+        <!-- Static sidebar for desktop -->
+        <div class="hidden lg:flex lg:flex-shrink-0">
+            <div class="flex flex-col w-64">
+                <!-- Sidebar component, swap this element with another sidebar if you like -->
+                <div class="flex flex-col h-0 flex-1">
+                    <div class="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
+                        <application-logo />
                     </div>
+                    <div class="flex-1 flex flex-col overflow-y-auto">
+                        <nav class="flex-1 px-2 py-4 bg-gray-800">
+                            <div class="space-y-1">
+                                <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
+                                <a href="#" class="bg-gray-900 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                    <!-- Current: "text-gray-300", Default: "text-gray-400 group-hover:text-gray-300" -->
+                                    <!-- Heroicon name: outline/home -->
+                                    <svg class="text-gray-300 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    Dashboard
+                                </a>
 
-                    <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="flex items-center px-4">
-                            <div v-if="$page.props.jetstream.managesProfilePhotos" class="flex-shrink-0 mr-3" >
-                                <img class="h-10 w-10 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
+                                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                    <!-- Heroicon name: outline/view-list -->
+                                    <svg class="text-gray-400 group-hover:text-gray-300 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                    </svg>
+                                    My Miners
+                                </a>
+
+                                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                    <!-- Heroicon name: outline/user-circle -->
+                                    <svg class="text-gray-400 group-hover:text-gray-300 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Report Earnings
+                                </a>
                             </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col w-0 flex-1 overflow-hidden">
+            <div class="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
+                <button
+                    type="button"
+                    class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-900 lg:hidden"
+                    @click="isOpen = !isOpen"
+                >
+                    <span class="sr-only">Open sidebar</span>
+                    <!-- Heroicon name: outline/menu-alt-2 -->
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                </button>
+            </div>
 
+            <main class="flex-1 relative overflow-y-auto focus:outline-none" tabindex="-1">
+                <div class="py-8 xl:py-10">
+                    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-5xl xl:grid xl:grid-cols-3">
+                        <div class="xl:col-span-2 xl:pr-8 xl:border-r xl:border-gray-200">
                             <div>
-                                <div class="font-medium text-base text-gray-800">{{ $page.props.user.name }}</div>
-                                <div class="font-medium text-sm text-gray-500">{{ $page.props.user.email }}</div>
-                            </div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
-                                Profile
-                            </jet-responsive-nav-link>
-
-                            <jet-responsive-nav-link :href="route('api-tokens.index')" :active="route().current('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
-                                API Tokens
-                            </jet-responsive-nav-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" @submit.prevent="logout">
-                                <jet-responsive-nav-link as="button">
-                                    Log Out
-                                </jet-responsive-nav-link>
-                            </form>
-
-                            <!-- Team Management -->
-                            <template v-if="$page.props.jetstream.hasTeamFeatures">
-                                <div class="border-t border-gray-200"></div>
-
-                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Manage Team
-                                </div>
-
-                                <!-- Team Settings -->
-                                <jet-responsive-nav-link :href="route('teams.show', $page.props.user.current_team)" :active="route().current('teams.show')">
-                                    Team Settings
-                                </jet-responsive-nav-link>
-
-                                <jet-responsive-nav-link :href="route('teams.create')" :active="route().current('teams.create')">
-                                    Create New Team
-                                </jet-responsive-nav-link>
-
-                                <div class="border-t border-gray-200"></div>
-
-                                <!-- Team Switcher -->
-                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Switch Teams
-                                </div>
-
-                                <template v-for="team in $page.props.user.all_teams" :key="team.id">
-                                    <form @submit.prevent="switchToTeam(team)">
-                                        <jet-responsive-nav-link as="button">
-                                            <div class="flex items-center">
-                                                <svg v-if="team.id == $page.props.user.current_team_id" class="mr-2 h-5 w-5 text-green-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                <div>{{ team.name }}</div>
+                                <div>
+                                    <div class="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b xl:pb-6">
+                                        <div>
+                                            <h1 class="text-2xl font-bold text-gray-900">ARIA attribute misspelled</h1>
+                                            <p class="mt-2 text-sm text-gray-500">
+                                                #400 opened by
+                                                <a href="#" class="font-medium text-gray-900">Hilary Mahy</a>
+                                                in
+                                                <a href="#" class="font-medium text-gray-900">Customer Portal</a>
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 flex space-x-3 md:mt-0">
+                                            <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                                                <!-- Heroicon name: solid/pencil -->
+                                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                </svg>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                                                <!-- Heroicon name: solid/bell -->
+                                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                                                </svg>
+                                                <span>Subscribe</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <aside class="mt-8 xl:hidden">
+                                        <h2 class="sr-only">Details</h2>
+                                        <div class="space-y-5">
+                                            <div class="flex items-center space-x-2">
+                                                <!-- Heroicon name: solid/lock-open -->
+                                                <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" />
+                                                </svg>
+                                                <span class="text-green-700 text-sm font-medium">Open Issue</span>
                                             </div>
-                                        </jet-responsive-nav-link>
-                                    </form>
-                                </template>
-                            </template>
+                                            <div class="flex items-center space-x-2">
+                                                <!-- Heroicon name: solid/chat-alt -->
+                                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                                                </svg>
+                                                <span class="text-gray-900 text-sm font-medium">4 comments</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <!-- Heroicon name: solid/calendar -->
+                                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                                </svg>
+                                                <span class="text-gray-900 text-sm font-medium">Created on <time datetime="2020-12-02">Dec 2, 2020</time></span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-6 border-t border-b border-gray-200 py-6 space-y-8">
+                                            <div>
+                                                <h2 class="text-sm font-medium text-gray-500">Assignees</h2>
+                                                <ul class="mt-3 space-y-3">
+                                                    <li class="flex justify-start">
+                                                        <a href="#" class="flex items-center space-x-3">
+                                                            <div class="flex-shrink-0">
+                                                                <img class="h-5 w-5 rounded-full" src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
+                                                            </div>
+                                                            <div class="text-sm font-medium text-gray-900">Eduardo Benz</div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h2 class="text-sm font-medium text-gray-500">Tags</h2>
+                                                <ul class="mt-2 leading-8">
+                                                    <li class="inline">
+                                                        <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5">
+                                                            <div class="absolute flex-shrink-0 flex items-center justify-center">
+                                                                <span class="h-1.5 w-1.5 rounded-full bg-rose-500" aria-hidden="true"></span>
+                                                            </div>
+                                                            <div class="ml-3.5 text-sm font-medium text-gray-900">Bug</div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="inline">
+                                                        <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5">
+                                                            <div class="absolute flex-shrink-0 flex items-center justify-center">
+                                                                <span class="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true"></span>
+                                                            </div>
+                                                            <div class="ml-3.5 text-sm font-medium text-gray-900">Accessibility</div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </aside>
+                                    <div class="py-3 xl:pt-6 xl:pb-0">
+                                        <h2 class="sr-only">Description</h2>
+                                        <div class="prose max-w-none">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, hic? Commodi cumque similique id tempora molestiae deserunt at suscipit, dolor voluptatem, numquam, harum consequatur laboriosam voluptas tempore aut voluptatum alias?
+                                            </p>
+                                            <ul>
+                                                <li>
+                                                    Tempor ultrices proin nunc fames nunc ut auctor vitae sed. Eget massa parturient vulputate fermentum id facilisis nam pharetra. Aliquet leo tellus.
+                                                </li>
+                                                <li>
+                                                    Turpis ac nunc adipiscing adipiscing metus tincidunt senectus tellus.
+                                                </li>
+                                                <li>
+                                                    Semper interdum porta sit tincidunt. Dui suspendisse scelerisque amet metus eget sed. Ut tellus in sed dignissim.
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <section aria-labelledby="activity-title" class="mt-8 xl:mt-10">
+                                <div>
+                                    <div class="divide-y divide-gray-200">
+                                        <div class="pb-4">
+                                            <h2 id="activity-title" class="text-lg font-medium text-gray-900">Activity</h2>
+                                        </div>
+                                        <div class="pt-6">
+                                            <!-- Activity feed-->
+                                            <div class="flow-root">
+                                                <ul class="-mb-8">
+                                                    <li>
+                                                        <div class="relative pb-8">
+                                                            <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                                            <div class="relative flex items-start space-x-3">
+                                                                <div class="relative">
+                                                                    <img class="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white" src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=8&amp;w=256&amp;h=256&amp;q=80" alt="">
+
+                                                                    <span class="absolute -bottom-0.5 -right-1 bg-white rounded-tl px-0.5 py-px">
+                                  <!-- Heroicon name: solid/chat-alt -->
+                                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                                  </svg>
+                                </span>
+                                                                </div>
+                                                                <div class="min-w-0 flex-1">
+                                                                    <div>
+                                                                        <div class="text-sm">
+                                                                            <a href="#" class="font-medium text-gray-900">Eduardo Benz</a>
+                                                                        </div>
+                                                                        <p class="mt-0.5 text-sm text-gray-500">
+                                                                            Commented 6d ago
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="mt-2 text-sm text-gray-700">
+                                                                        <p>
+                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div class="relative pb-8">
+                                                            <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                                            <div class="relative flex items-start space-x-3">
+                                                                <div>
+                                                                    <div class="relative px-1">
+                                                                        <div class="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                                            <!-- Heroicon name: solid/user-circle -->
+                                                                            <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                                                                            </svg>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="min-w-0 flex-1 py-1.5">
+                                                                    <div class="text-sm text-gray-500">
+                                                                        <a href="#" class="font-medium text-gray-900">Hilary Mahy</a>
+                                                                        assigned
+                                                                        <a href="#" class="font-medium text-gray-900">Kristin Watson</a>
+                                                                        <span class="whitespace-nowrap">2d ago</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div class="relative pb-8">
+                                                            <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                                            <div class="relative flex items-start space-x-3">
+                                                                <div>
+                                                                    <div class="relative px-1">
+                                                                        <div class="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                                            <!-- Heroicon name: solid/tag -->
+                                                                            <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                                <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                                                            </svg>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="min-w-0 flex-1 py-0">
+                                                                    <div class="text-sm leading-8 text-gray-500">
+                                  <span class="mr-0.5">
+                                    <a href="#" class="font-medium text-gray-900">Hilary Mahy</a>
+                                    added tags
+                                  </span>
+                                                                        <span class="mr-0.5">
+                                    <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5 text-sm">
+                                      <span class="absolute flex-shrink-0 flex items-center justify-center">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500" aria-hidden="true"></span>
+                                      </span>
+                                      <span class="ml-3.5 font-medium text-gray-900">Bug</span>
+                                    </a>
+
+                                    <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5 text-sm">
+                                      <span class="absolute flex-shrink-0 flex items-center justify-center">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true"></span>
+                                      </span>
+                                      <span class="ml-3.5 font-medium text-gray-900">Accessibility</span>
+                                    </a>
+                                  </span>
+                                                                        <span class="whitespace-nowrap">6h ago</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div class="relative pb-8">
+                                                            <div class="relative flex items-start space-x-3">
+                                                                <div class="relative">
+                                                                    <img class="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=8&amp;w=256&amp;h=256&amp;q=80" alt="">
+
+                                                                    <span class="absolute -bottom-0.5 -right-1 bg-white rounded-tl px-0.5 py-px">
+                                  <!-- Heroicon name: solid/chat-alt -->
+                                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                                  </svg>
+                                </span>
+                                                                </div>
+                                                                <div class="min-w-0 flex-1">
+                                                                    <div>
+                                                                        <div class="text-sm">
+                                                                            <a href="#" class="font-medium text-gray-900">Jason Meyers</a>
+                                                                        </div>
+                                                                        <p class="mt-0.5 text-sm text-gray-500">
+                                                                            Commented 2h ago
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="mt-2 text-sm text-gray-700">
+                                                                        <p>
+                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam. Scelerisque amet elit non sit ut tincidunt condimentum. Nisl ultrices eu venenatis diam.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="mt-6">
+                                                <div class="flex space-x-3">
+                                                    <div class="flex-shrink-0">
+                                                        <div class="relative">
+                                                            <img class="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
+
+                                                            <span class="absolute -bottom-0.5 -right-1 bg-white rounded-tl px-0.5 py-px">
+                              <!-- Heroicon name: solid/chat-alt -->
+                              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                              </svg>
+                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="min-w-0 flex-1">
+                                                        <form action="#">
+                                                            <div>
+                                                                <label for="comment" class="sr-only">Comment</label>
+                                                                <textarea id="comment" name="comment" rows="3" class="shadow-sm block w-full focus:ring-gray-900 focus:border-gray-900 sm:text-sm border-gray-300 rounded-md" placeholder="Leave a comment"></textarea>
+                                                            </div>
+                                                            <div class="mt-6 flex items-center justify-end space-x-4">
+                                                                <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                                                                    <!-- Heroicon name: solid/check-circle -->
+                                                                    <svg class="-ml-1 mr-2 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                                    </svg>
+                                                                    <span>Close issue</span>
+                                                                </button>
+                                                                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                                                                    Comment
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
+                        <aside class="hidden xl:block xl:pl-8">
+                            <h2 class="sr-only">Details</h2>
+                            <div class="space-y-5">
+                                <div class="flex items-center space-x-2">
+                                    <!-- Heroicon name: solid/lock-open -->
+                                    <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" />
+                                    </svg>
+                                    <span class="text-green-700 text-sm font-medium">Open Issue</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <!-- Heroicon name: solid/chat-alt -->
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-gray-900 text-sm font-medium">4 comments</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <!-- Heroicon name: solid/calendar -->
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-gray-900 text-sm font-medium">Created on <time datetime="2020-12-02">Dec 2, 2020</time></span>
+                                </div>
+                            </div>
+                            <div class="mt-6 border-t border-gray-200 py-6 space-y-8">
+                                <div>
+                                    <h2 class="text-sm font-medium text-gray-500">Assignees</h2>
+                                    <ul class="mt-3 space-y-3">
+                                        <li class="flex justify-start">
+                                            <a href="#" class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <img class="h-5 w-5 rounded-full" src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
+                                                </div>
+                                                <div class="text-sm font-medium text-gray-900">Eduardo Benz</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h2 class="text-sm font-medium text-gray-500">Tags</h2>
+                                    <ul class="mt-2 leading-8">
+                                        <li class="inline">
+                                            <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5">
+                                                <div class="absolute flex-shrink-0 flex items-center justify-center">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-rose-500" aria-hidden="true"></span>
+                                                </div>
+                                                <div class="ml-3.5 text-sm font-medium text-gray-900">Bug</div>
+                                            </a>
+                                        </li>
+                                        <li class="inline">
+                                            <a href="#" class="relative inline-flex items-center rounded-full border border-gray-300 px-3 py-0.5">
+                                                <div class="absolute flex-shrink-0 flex items-center justify-center">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true"></span>
+                                                </div>
+                                                <div class="ml-3.5 text-sm font-medium text-gray-900">Accessibility</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </aside>
                     </div>
                 </div>
-            </nav>
-
-            <!-- Page Heading -->
-            <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <slot name="header"></slot>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <main>
-                <slot></slot>
             </main>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -236,9 +542,11 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink'
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+    import ApplicationLogo from "../Jetstream/ApplicationLogo";
 
     export default {
         components: {
+            ApplicationLogo,
             JetApplicationMark,
             JetBanner,
             JetDropdown,
@@ -250,6 +558,7 @@
         data() {
             return {
                 showingNavigationDropdown: false,
+                isOpen: false
             }
         },
 
