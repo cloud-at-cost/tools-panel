@@ -372,7 +372,7 @@
         tabindex="-1"
       >
         <div class="py-8 xl:py-10">
-          <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-5xl xl:grid xl:grid-cols-3">
+          <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-5xl">
             <!-- Page Heading -->
             <header
               v-if="$slots.header"
