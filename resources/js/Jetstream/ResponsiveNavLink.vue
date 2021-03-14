@@ -1,13 +1,21 @@
 <template>
-    <div>
-        <button :class="classes" class="w-full text-left" v-if="as == 'button'">
-            <slot></slot>
-        </button>
+  <div>
+    <button
+      v-if="as == 'button'"
+      :class="classes"
+      class="w-full text-left"
+    >
+      <slot />
+    </button>
 
-        <inertia-link :href="href" :class="classes" v-else>
-            <slot></slot>
-        </inertia-link>
-    </div>
+    <inertia-link
+      v-else
+      :href="href"
+      :class="classes"
+    >
+      <slot />
+    </inertia-link>
+  </div>
 </template>
 
 <script>
