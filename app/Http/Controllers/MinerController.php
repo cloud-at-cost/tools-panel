@@ -56,6 +56,7 @@ class MinerController extends Controller
     {
         $miner = Miner::create([
             'miner_type_id' => $request->type()->id,
+            'miner_id' => $request->input('miner_id'),
             'identifier' => $request->input('identifier'),
             'amount_paid' => $request->input('amount_paid'),
             'user_id' => $request->user()->id,

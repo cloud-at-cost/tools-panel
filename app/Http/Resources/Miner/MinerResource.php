@@ -21,6 +21,7 @@ class MinerResource extends JsonResource
 
         return [
             'hash' => $miner->hash,
+            'miner_id' => $miner->miner_id,
             'identifier' => $miner->identifier,
             'amount_paid' => $miner->amount_paid,
             'type' => new MinerTypeResource($miner->type),

@@ -19,7 +19,13 @@
                       scope="col"
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Identifier
+                      Miner ID
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Package ID
                     </th>
                     <th
                       scope="col"
@@ -51,6 +57,16 @@
                       'bg-gray-50': (index % 2) === 1,
                     }"
                   >
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <a
+                        :href="route('miners.show', {
+                          miner: miner.hash
+                        })"
+                        class="text-indigo-600 hover:text-indigo-900"
+                      >
+                        {{ miner.miner_id }}
+                      </a>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <a
                         :href="route('miners.show', {
@@ -90,7 +106,7 @@
                     }"
                   >
                     <td
-                      colspan="5"
+                      colspan="6"
                       class="text-center px-6 py-4 w"
                     >
                       <inertia-link :href="route('miners.create')">

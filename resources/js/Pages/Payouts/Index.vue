@@ -37,7 +37,7 @@
                       scope="col"
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Amount
+                      Amount (BTC)
                     </th>
                     <th
                       scope="col"
@@ -89,7 +89,6 @@
                     }"
                   >
                     <td colspan="6">
-                      <!-- This example requires Tailwind CSS v2.0+ -->
                       <nav
                         class="bg-white px-4 py-3 flex items-center justify-between sm:px-6"
                         aria-label="Pagination"
@@ -175,7 +174,7 @@ export default {
             return this.payouts.meta;
         },
     },
-    
+
     methods: {
         formatDate(date) {
             const dateInfo = new Date(date);

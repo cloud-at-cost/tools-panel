@@ -30,6 +30,11 @@ class UpdateRequest extends FormRequest
                 'required',
                 Rule::exists('miner_types', 'slug')
             ],
+            'miner_id' => [
+                'required',
+                Rule::unique('miners', 'miner_id')
+                    ->ignoreModel($this->route('miner'))
+            ],
             'identifier' => [
                 'required',
                 Rule::unique('miners', 'identifier')
@@ -37,7 +42,7 @@ class UpdateRequest extends FormRequest
             ],
             'amount_paid' => [
                 'required',
-                'digits_between:0,999999999',
+                'numeric',
             ]
         ];
     }
