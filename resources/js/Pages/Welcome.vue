@@ -208,6 +208,10 @@
               <p class="mt-5 max-w-prose mx-auto text-xl text-gray-500">
                 Use this to the growth of your BTC as well as help others make informed decisions.
               </p>
+              <ul class="mt-5 max-w-prose mx-auto text-xl text-gray-500">
+                <li><strong>Miners Tracked</strong>: {{ stats.miners }}</li>
+                <li><strong>Payouts Logged</strong>: {{ stats.payouts }}</li>
+              </ul>
             </div>
             <div class="mt-12 -mb-10 sm:-mb-24 lg:-mb-80">
               Graphs Here
@@ -263,6 +267,10 @@ export default {
     props: {
         canLogin: Boolean,
         canRegister: Boolean,
+        stats: {
+            type: Object,
+            required: true
+        }
     },
 
     data: () => ({
