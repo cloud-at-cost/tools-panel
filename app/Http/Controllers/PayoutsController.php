@@ -14,6 +14,7 @@ class PayoutsController extends Controller
     public function index(Request $request)
     {
         $payouts = MinerPayout::whereHas('miner', fn($query) => $query->whereUserId($request->user()->id))
+            ->latest('created_at')
             ->paginate();
 
         return Inertia::render(
