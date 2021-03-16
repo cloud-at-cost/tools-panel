@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Miner\MinerPayoutCollection;
+use App\Models\Bitcoin\BitcoinMarketValue;
 use App\Models\Miner;
 use App\Models\Miner\MinerPayout;
 use Illuminate\Http\Request;
@@ -13,14 +14,18 @@ class PayoutsController extends Controller
 {
     public function index(Request $request)
     {
-        $payouts = MinerPayout::whereHas('miner', fn($query) => $query->whereUserId($request->user()->id))
+        $payouts = MinerPayout::forUser($request->user())
             ->latest('created_at')
             ->paginate();
 
         return Inertia::render(
             'Payouts/Index',
             [
-                'payouts' => new MinerPayoutCollection($payouts)
+                'payouts' => new MinerPayoutCollection($payouts),
+                'total' => MinerPayout::forUser($request->user())
+                        ->deposits()
+                        ->sum('amount') / 100000000,
+                'conversion' => optional(BitcoinMarketValue::latest('created_at')->first())->price,
             ]
         );
     }

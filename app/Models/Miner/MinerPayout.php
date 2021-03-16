@@ -3,6 +3,7 @@
 namespace App\Models\Miner;
 
 use App\Models\Miner;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,5 +28,15 @@ class MinerPayout extends Model
     public function setAmountAttribute(float $value)
     {
         $this->attributes['amount'] = $value * 100000000;
+    }
+
+    public static function scopeForUser($query, User $user)
+    {
+        $query->whereHas('miner', fn($q) => $q->whereUserId($user->id));
+    }
+
+    public static function scopeDeposits($query)
+    {
+        $query->whereType('deposit');
     }
 }

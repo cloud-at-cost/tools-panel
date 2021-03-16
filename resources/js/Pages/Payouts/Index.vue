@@ -1,9 +1,16 @@
 <template>
   <app-layout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        My Payouts
-      </h2>
+      <div class="grid grid-cols-2">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+          My Payouts
+        </h2>
+        <div class="text-right">
+          <inertia-link :href="route('payouts.create')">
+            Add Payouts
+          </inertia-link>
+        </div>
+      </div>
     </template>
 
     <!-- This example requires Tailwind CSS v2.0+ -->
@@ -37,7 +44,8 @@
                       scope="col"
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Amount (BTC)
+                      Amount (BTC)<br>
+                      1 BTC = {{ Math.round(conversion * 100) / 100 }} USD
                     </th>
                     <th
                       scope="col"
@@ -48,6 +56,19 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr v-if="total !== undefined">
+                    <td
+                      colspan="3"
+                      class="text-right uppercase px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
+                      Total
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {{ total }}<br>
+                      Estimated: {{ calculateEstimatedUsd(total) }} USD
+                    </td>
+                    <td />
+                  </tr>
                   <tr
                     v-for="(payout, index) in payoutList"
                     :key="payout.hash"
@@ -73,7 +94,8 @@
                       {{ payout.miner.type.name }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {{ payout.amount }}
+                      {{ payout.amount }}<br>
+                      Estimated: {{ calculateEstimatedUsd(payout.amount) }} USD
                     </td>
                     <td class="px-6 py-4 text-right text-sm font-medium text-gray-500">
                       {{ payout.type }}
@@ -158,6 +180,18 @@ export default {
         payouts: {
             type: Object,
             required: true
+        },
+
+        total: {
+            type: Number,
+            required: false,
+            default: undefined
+        },
+
+        conversion: {
+            type: Number,
+            required: false,
+            default: undefined
         }
     },
 
@@ -190,6 +224,10 @@ export default {
             z = z || '0';
             n = n + '';
             return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+        },
+
+        calculateEstimatedUsd(amount) {
+            return Math.round(amount * this.conversion * 10000) / 10000;
         }
     }
 }
