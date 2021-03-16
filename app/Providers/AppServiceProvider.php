@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Charts\Miners\Payouts\AllPayoutsChart;
 use App\Charts\Miners\Payouts\MyPayoutsChart;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $charts->register([
+            AllPayoutsChart::class,
             MyPayoutsChart::class,
         ]);
     }

@@ -214,7 +214,10 @@
               </ul>
             </div>
             <div class="mt-12 -mb-10 sm:-mb-24 lg:-mb-80">
-              Graphs Here
+              <div
+                id="chart"
+                style="height: 300px;"
+              />
             </div>
           </div>
         </div>
@@ -275,7 +278,18 @@ export default {
 
     data: () => ({
         isOpen: false,
-    })
+    }),
+
+    mounted() {
+        const chart = new Chartisan({
+            el: '#chart',
+            url: this.route('charts.all_payouts_chart'),
+            hooks: new ChartisanHooks()
+                .title('Average Payouts')
+                .legend({ position: 'bottom' })
+                .datasets([{ type: 'line', fill: false }, 'bar']),
+        });
+    }
 }
 </script>
 

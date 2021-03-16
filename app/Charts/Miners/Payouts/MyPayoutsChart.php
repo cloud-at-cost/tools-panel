@@ -19,6 +19,7 @@ class MyPayoutsChart extends BaseChart
     public function handler(Request $request): Chartisan
     {
         $myPayouts = MinerPayout::forUser($request->user())
+            ->deposits()
             ->orderBy('created_at', 'asc')
             ->get();
 

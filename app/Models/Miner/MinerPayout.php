@@ -39,4 +39,9 @@ class MinerPayout extends Model
     {
         $query->whereType('deposit');
     }
+
+    public static function scopeForType($query, MinerType $minerType)
+    {
+        $query->whereHas('miner', fn($q) => $q->whereMinerTypeId($minerType->id));
+    }
 }
