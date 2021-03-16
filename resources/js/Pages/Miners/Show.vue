@@ -147,13 +147,11 @@
 
         methods: {
             formatDate(date) {
-                const dateInfo = new Date(date);
-                return `${dateInfo.getFullYear()}-${this.pad(dateInfo.getMonth(), 2, '0')}-${this.pad(dateInfo.getDate(), 2, '0')}`
+                return date.split('T')[0];
             },
 
             formatTime(date) {
-                const dateInfo = new Date(date);
-                return `${this.pad(dateInfo.getHours(), 2, '0')}:${this.pad(dateInfo.getMinutes(), 2, '0')}:${this.pad(dateInfo.getSeconds(), 2, '0')}`;
+                return date.split('T')[1].split('.')[0]
             },
 
             pad(n, width, z) {
