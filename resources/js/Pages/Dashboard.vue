@@ -9,7 +9,10 @@
     <div class="py-12">
       <div class="mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
-          Content Here
+          <div
+            id="chart"
+            style="height: 300px;"
+          />
         </div>
       </div>
     </div>
@@ -17,11 +20,22 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayout';
 
     export default {
         components: {
             AppLayout,
         },
+
+        mounted() {
+            const chart = new Chartisan({
+                el: '#chart',
+                url: this.route('charts.my_payouts_chart'),
+                hooks: new ChartisanHooks()
+                    .title('Your Payouts')
+                    .legend({ position: 'bottom' })
+                    .datasets([{ type: 'line', fill: false }, 'bar']),
+            });
+        }
     }
 </script>
