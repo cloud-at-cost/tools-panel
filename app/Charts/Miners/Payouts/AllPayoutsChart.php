@@ -44,7 +44,7 @@ class AllPayoutsChart extends BaseChart
                 $data = [];
 
                 foreach($dates as $key => $date) {
-                    $data[$key] = optional($payouts[$date])->amount;
+                    $data[$key] = optional($payouts[$date] ?? null)->amount;
                 }
 
                 $chart->dataset($minerType->name, $data);
