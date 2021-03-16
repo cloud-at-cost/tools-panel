@@ -19,7 +19,7 @@ class MinerPayoutResource extends JsonResource
 
         return [
             'hash' => $payout->hash,
-            'date' => $payout->created_at,
+            'date' => $payout->created_at->format('Y-m-d H:i:s'),
             'amount' => $payout->amount,
             'type' => $payout->type,
             'miner' => new MinerResource($payout->miner)

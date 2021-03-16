@@ -211,11 +211,11 @@ export default {
 
     methods: {
         formatDate(date) {
-            return date.split('T')[0];
+            return date.split(' ')[0];
         },
 
         formatTime(date) {
-            return date.split('T')[1].split('.')[0]
+            return date.split(' ')[1];
         },
 
         pad(n, width, z) {
