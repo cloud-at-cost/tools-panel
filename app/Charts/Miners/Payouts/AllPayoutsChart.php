@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Charts\Miners\Payouts;
 
+use App\Models\Miner;
 use App\Models\Miner\MinerPayout;
 use App\Models\Miner\MinerType;
 use Chartisan\PHP\Chartisan;
@@ -29,6 +30,10 @@ class AllPayoutsChart extends BaseChart
 
         MinerType::get()
             ->each(function(MinerType $minerType) use($dates, $chart) {
+                if(Miner::whereMinerTypeId($minerType->id)->count() < 2) {
+                    return;
+                }
+
                 $payouts = MinerPayout::forType($minerType)
                     ->deposits()
                     ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
