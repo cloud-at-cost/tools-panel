@@ -287,7 +287,7 @@ export default {
             hooks: new ChartisanHooks()
                 .title('Average Payouts')
                 .legend({ position: 'bottom' })
-                .datasets([{ type: 'line', fill: false }, 'bar']),
+                .datasets([{ type: 'line', fill: false }]),
         });
     }
 }

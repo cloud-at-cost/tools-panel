@@ -19,7 +19,7 @@ class AllPayoutsChart extends BaseChart
      */
     public function handler(Request $request): Chartisan
     {
-        $dates = MinerPayout::selectRaw('DATE_FORMAT(created_at, "%Y-%c-%d %H") as created')
+        $dates = MinerPayout::selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
             ->distinct()
             ->get()
             ->transform(fn($row) => $row->created);
@@ -31,7 +31,7 @@ class AllPayoutsChart extends BaseChart
             ->each(function(MinerType $minerType) use($dates, $chart) {
                 $payouts = MinerPayout::forType($minerType)
                     ->deposits()
-                    ->selectRaw('DATE_FORMAT(created_at, "%Y-%c-%d %H") as created')
+                    ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
                     ->selectRaw('AVG(amount) AS amount')
                     ->groupBy('created')
                     ->get()
