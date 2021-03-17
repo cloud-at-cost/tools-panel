@@ -10,7 +10,7 @@
       <div class="mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div
-            id="chart"
+            id="my-payouts"
             style="height: 300px;"
           />
         </div>
@@ -28,11 +28,12 @@
         },
 
         mounted() {
-            const chart = new Chartisan({
-                el: '#chart',
+            new Chartisan({
+                el: '#my-payouts',
                 url: this.route('charts.my_payouts_chart'),
                 hooks: new ChartisanHooks()
                     .title('Your Payouts')
+                    .tooltip(true)
                     .legend({ position: 'bottom' })
                     .datasets([{ type: 'line', fill: false }, 'bar']),
             });

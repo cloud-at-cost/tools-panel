@@ -218,6 +218,11 @@
                 id="chart"
                 style="height: 300px;"
               />
+
+              <div
+                id="miner-prices"
+                style="height: 300px;"
+              />
             </div>
           </div>
         </div>
@@ -281,11 +286,21 @@ export default {
     }),
 
     mounted() {
-        const chart = new Chartisan({
+        new Chartisan({
             el: '#chart',
             url: this.route('charts.all_payouts_chart'),
             hooks: new ChartisanHooks()
                 .title('Average Payouts')
+                .tooltip(true)
+                .legend({ position: 'bottom' })
+                .datasets([{ type: 'line', fill: false }]),
+        });
+
+        new Chartisan({
+            el: '#miner-prices',
+            url: this.route('charts.price_history_chart'),
+            hooks: new ChartisanHooks()
+                .tooltip(true)
                 .legend({ position: 'bottom' })
                 .datasets([{ type: 'line', fill: false }]),
         });

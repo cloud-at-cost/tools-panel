@@ -2,16 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace App\Charts\Miners\Payouts;
+namespace App\Charts\MinerType;
 
-use App\Models\Miner;
-use App\Models\Miner\MinerPayout;
 use App\Models\Miner\MinerType;
+use App\Models\MinerType\MinerTypePriceHistory;
 use Chartisan\PHP\Chartisan;
 use ConsoleTVs\Charts\BaseChart;
 use Illuminate\Http\Request;
 
-class AllPayoutsChart extends BaseChart
+class PriceHistoryChart extends BaseChart
 {
     /**
      * Handles the HTTP request for the given chart.
@@ -20,7 +19,7 @@ class AllPayoutsChart extends BaseChart
      */
     public function handler(Request $request): Chartisan
     {
-        $dates = MinerPayout::selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
+        $dates = MinerTypePriceHistory::selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
             ->distinct()
             ->orderBy('created')
             ->get()
@@ -31,26 +30,18 @@ class AllPayoutsChart extends BaseChart
 
         MinerType::get()
             ->each(function(MinerType $minerType) use($dates, $chart) {
-                if(Miner::whereMinerTypeId($minerType->id)->count() < 2) {
-                    return;
-                }
-
-                $payouts = MinerPayout::forType($minerType)
-                    ->deposits()
+                $prices = $minerType->priceHistory()
+                    ->selectRaw('AVG(price) as price')
+                    ->selectRaw('AVG(bitcoins_per_month) as bitcoins_per_month')
                     ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
-                    ->selectRaw('AVG(amount) AS amount')
                     ->groupBy('created')
                     ->get()
                     ->keyBy('created');
 
-                if($payouts->count() === 0) {
-                    return;
-                }
-
                 $data = [];
 
                 foreach($dates as $key => $date) {
-                    $data[$key] = optional($payouts[$date] ?? null)->amount;
+                    $data[$key] = optional($prices[$date] ?? null)->price;
                 }
 
                 $chart->dataset($minerType->name, $data);
