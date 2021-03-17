@@ -2,13 +2,10 @@
 
 namespace App\Console\Commands\CloudAtCost;
 
-use App\Models\Miner;
 use App\Models\Miner\MinerType;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use KubAT\PhpSimple\HtmlDomParser;
 
 class ImportPrices extends Command
 {
@@ -43,14 +40,7 @@ class ImportPrices extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'verify' => false,
-            'decode_content' => false
-        ]);
-
-        $content = $client->get('https://cloudatcost.com/virtual-miners')
-            ->getBody();
-        $html = $content->getContents();
+        $html = $this->retrieveHtml();
 
         $minerTypes = [];
         preg_match_all('/[a-zA-Z]{1,2}\d+ Miner/', $html, $minerTypes);
@@ -95,5 +85,26 @@ class ImportPrices extends Command
             });
 
         return 0;
+    }
+
+    private function retrieveHtml():string
+    {
+        $client = new Client([
+            'verify' => false,
+            'decode_content' => false
+        ]);
+
+        for($x = 0; $x < 10; $x++) {
+            try {
+                $content = $client->get('https://cloudatcost.com/virtual-miners')
+                    ->getBody();
+                return $content->getContents();
+            }
+            catch(\Exception $exception) {
+                if($x === 9) {
+                    throw $exception;
+                }
+            }
+        }
     }
 }
