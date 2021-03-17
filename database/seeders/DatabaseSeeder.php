@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MinerType\MinerTypePriceHistory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,5 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(MinerTypeSeeder::class);
+        $this->call(MinerTypePriceHistorySeeder::class);
     }
 }
