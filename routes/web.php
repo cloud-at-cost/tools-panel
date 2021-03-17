@@ -22,8 +22,8 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'stats' => [
-            'miners' => \App\Models\Miner::count(),
-            'payouts' => \App\Models\Miner\MinerPayout::count(),
+            'miners' => \App\Models\Miner::whereHas('payouts')->count(),
+            'payouts' => \App\Models\Miner\MinerPayout::whereHas('miner')->count(),
         ],
     ]);
 });
