@@ -40,10 +40,21 @@ class ImportPrices extends Command
      */
     public function handle()
     {
-        $html = $this->retrieveHtml();
+        /*$this->process(
+            $this->retrieveHtml('https://cloudatcost.com/virtual-gpu-miners')
+        );*/
 
+        $this->process(
+            $this->retrieveHtml('https://cloudatcost.com/virtual-asic-miners')
+        );
+
+        return 0;
+    }
+
+    private function process(string $html)
+    {
         $minerTypes = [];
-        preg_match_all('/[a-zA-Z]{1,2}\d+ Miner/', $html, $minerTypes);
+        preg_match_all('/[a-zA-Z]{1,2}\d+[a]? Miner/', $html, $minerTypes);
 
         $bitcoinsPerMonth = [];
         preg_match_all('/(\d\.\d+) <strong[^>]*>BTC\/Month/i', $html, $bitcoinsPerMonth);
@@ -83,11 +94,9 @@ class ImportPrices extends Command
                 }
 
             });
-
-        return 0;
     }
 
-    private function retrieveHtml():string
+    private function retrieveHtml(string $url):string
     {
         $client = new Client([
             'verify' => false,
@@ -96,7 +105,7 @@ class ImportPrices extends Command
 
         for($x = 0; $x < 10; $x++) {
             try {
-                $content = $client->get('https://cloudatcost.com/virtual-miners')
+                $content = $client->get($url)
                     ->getBody();
                 return $content->getContents();
             }
