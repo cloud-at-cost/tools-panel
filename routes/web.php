@@ -36,6 +36,7 @@ Route::group([
     'middleware' => ['auth:sanctum', 'verified']
 ], function() {
     Route::resource('miners', MinerController::class);
+    Route::get('api/v1/payouts/bitcoin', [\App\Http\Controllers\Api\V1\Payouts\BitcoinController::class, 'get']);
 
     Route::group([
         'prefix' => 'payouts'
