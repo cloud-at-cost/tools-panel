@@ -84,12 +84,14 @@ class ImportPrices extends Command
                     ->where([
                         'price' => $priceList[$index] * 100,
                         'bitcoins_per_month' => $bitcoinsPerMonth[$index] * 100000000,
+                        'created_at' => today(),
                     ])->first();
 
                 if(!$history) {
                     $minerType->priceHistory()->create([
                         'price' => $priceList[$index],
                         'bitcoins_per_month' => $bitcoinsPerMonth[$index],
+                        'created_at' => today(),
                     ]);
                 }
 
