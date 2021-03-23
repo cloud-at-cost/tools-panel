@@ -40,9 +40,9 @@ class ImportPrices extends Command
      */
     public function handle()
     {
-        /*$this->process(
+        $this->process(
             $this->retrieveHtml('https://cloudatcost.com/virtual-gpu-miners')
-        );*/
+        );
 
         $this->process(
             $this->retrieveHtml('https://cloudatcost.com/virtual-asic-miners')
