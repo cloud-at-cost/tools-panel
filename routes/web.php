@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CloudAtCost\PlatformOperatingSystemController;
+use App\Http\Controllers\Api\V1\Payouts\BitcoinController;
 use App\Http\Controllers\MinerController;
 use App\Http\Controllers\PayoutsController;
 use Illuminate\Foundation\Application;
@@ -36,7 +38,8 @@ Route::group([
     'middleware' => ['auth:sanctum', 'verified']
 ], function() {
     Route::resource('miners', MinerController::class);
-    Route::get('api/v1/payouts/bitcoin', [\App\Http\Controllers\Api\V1\Payouts\BitcoinController::class, 'get']);
+    Route::get('api/v1/payouts/bitcoin', [BitcoinController::class, 'get']);
+    Route::get('api/v1/platform/{platform}/operating-systems', [PlatformOperatingSystemController::class, 'index']);
 
     Route::group([
         'prefix' => 'payouts'
