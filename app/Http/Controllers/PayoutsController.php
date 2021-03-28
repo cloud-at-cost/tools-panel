@@ -74,7 +74,7 @@ class PayoutsController extends Controller
         if($request->get('api')) {
             return [
                 'total' => $payouts->count(),
-                'success' => $validPayouts->count(),
+                'successful' => $validPayouts->count(),
                 'failed' => $payouts->count() - $validPayouts->count(),
                 'new' => $new,
                 'existing' => $existing
