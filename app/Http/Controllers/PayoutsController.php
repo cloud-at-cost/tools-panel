@@ -41,10 +41,15 @@ class PayoutsController extends Controller
     {
         $availableMiners = $request->user()->miners->keyBy('identifier');
 
-        collect($request->input('payouts'))
-            ->transform(fn($payout) => (object)$payout)
-            ->filter(fn($payout) => isset($availableMiners[$payout->packageID]))
-            ->each(function($payout) use($availableMiners) {
+        $existing = 0;
+        $new = 0;
+
+        $payouts = collect($request->input('payouts'))
+            ->transform(fn($payout) => (object)$payout);
+
+        $validPayouts = $payouts->filter(fn($payout) => isset($availableMiners[$payout->packageID]));
+
+        $validPayouts->each(function($payout) use($availableMiners, &$existing, &$new) {
                 $miner = $availableMiners[$payout->packageID];
 
                 $actual = $miner->payouts()
@@ -52,12 +57,29 @@ class PayoutsController extends Controller
                     ->whereType($payout->type)
                     ->firstOrNew();
 
+                if($actual->exists) {
+                    $existing++;
+                }
+                else {
+                    $new++;
+                }
+
                 $actual->created_at = $payout->date;
                 $actual->type = $payout->type;
                 $actual->amount = $payout->amount;
 
                 $actual->save();
             });
+
+        if($request->get('api')) {
+            return [
+                'total' => $payouts->count(),
+                'success' => $validPayouts->count(),
+                'failed' => $payouts->count() - $validPayouts->count(),
+                'new' => $new,
+                'existing' => $existing
+            ];
+        }
 
         return Inertia::location(
             route('payouts.index')
