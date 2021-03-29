@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\Bitcoin\UpdateMarketValue;
 use App\Console\Commands\CloudAtCost\ImportBuildMachines;
 use App\Console\Commands\CloudAtCost\ImportPrices;
+use App\Console\Commands\CloudAtCost\ImportWalletBalances;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         UpdateMarketValue::class,
         ImportPrices::class,
         ImportBuildMachines::class,
+        ImportWalletBalances::class,
     ];
 
     /**
@@ -35,6 +37,8 @@ class Kernel extends ConsoleKernel
             ->hourly();
         $schedule->command(ImportBuildMachines::class)
             ->daily();
+        $schedule->command(ImportWalletBalances::class)
+            ->everySixHours();
     }
 
     /**
