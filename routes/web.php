@@ -34,12 +34,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
+Route::get('api/v1/platform/{platform}/operating-systems', [PlatformOperatingSystemController::class, 'index']);
+
 Route::group([
     'middleware' => ['auth:sanctum', 'verified']
 ], function() {
     Route::resource('miners', MinerController::class);
     Route::get('api/v1/payouts/bitcoin', [BitcoinController::class, 'get']);
-    Route::get('api/v1/platform/{platform}/operating-systems', [PlatformOperatingSystemController::class, 'index']);
 
     Route::group([
         'prefix' => 'payouts'
