@@ -56,6 +56,11 @@ class ImportPrices extends Command
         $minerTypes = [];
         preg_match_all('/[a-zA-Z]{1,2}\d+[a]? Miner/', $html, $minerTypes);
 
+        $minerTypes = array_filter(
+            array_unique($minerTypes[0]),
+            fn($key) => $key !== 'PU2 Miner',
+        );
+
         $bitcoinsPerMonth = [];
         preg_match_all('/(\d\.\d+) <strong[^>]*>BTC\/Month/i', $html, $bitcoinsPerMonth);
         $bitcoinsPerMonth = $bitcoinsPerMonth[1];
@@ -64,7 +69,7 @@ class ImportPrices extends Command
         preg_match_all('/\$(\d+)\/One-time/i', $html, $priceList);
         $priceList = $priceList[1];
 
-        collect($minerTypes[0])
+        collect($minerTypes)
             ->unique()
             ->values()
             ->each(function($type, $index) use($priceList, $bitcoinsPerMonth) {
