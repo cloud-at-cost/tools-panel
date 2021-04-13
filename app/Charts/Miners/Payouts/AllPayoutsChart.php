@@ -22,6 +22,7 @@ class AllPayoutsChart extends BaseChart
     {
         $dates = MinerPayout::selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
             ->distinct()
+            ->where('created_at', '>=', now()->subDays(30))
             ->orderBy('created')
             ->get()
             ->transform(fn($row) => $row->created);
@@ -41,6 +42,7 @@ class AllPayoutsChart extends BaseChart
                     ->selectRaw('AVG(amount) AS amount')
                     ->groupBy('created')
                     ->get()
+                    ->where('created_at', '>=', now()->subDays(30))
                     ->keyBy('created');
 
                 if($payouts->count() === 0) {
