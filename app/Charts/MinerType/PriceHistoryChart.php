@@ -21,6 +21,7 @@ class PriceHistoryChart extends BaseChart
     {
         $dates = MinerTypePriceHistory::selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
             ->distinct()
+            ->where('created_at', '>=', now()->subDays(30))
             ->orderBy('created')
             ->get()
             ->transform(fn($row) => $row->created);
@@ -29,8 +30,16 @@ class PriceHistoryChart extends BaseChart
             ->labels($dates->toArray());
 
         MinerType::get()
+            ->filter(function(MinerType $minerType) use($request) {
+                if(empty($request->get('class'))) {
+                    return true;
+                }
+
+                return $minerType->slug[0] === $request->get('class');
+            })
             ->each(function(MinerType $minerType) use($dates, $chart) {
                 $prices = $minerType->priceHistory()
+                    ->where('created_at', '>=', now()->subDays(30))
                     ->selectRaw('AVG(price) as price')
                     ->selectRaw('AVG(bitcoins_per_month) as bitcoins_per_month')
                     ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')

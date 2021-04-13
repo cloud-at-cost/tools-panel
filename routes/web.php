@@ -4,6 +4,10 @@ use App\Http\Controllers\Api\V1\CloudAtCost\PlatformOperatingSystemController;
 use App\Http\Controllers\Api\V1\Payouts\BitcoinController;
 use App\Http\Controllers\MinerController;
 use App\Http\Controllers\PayoutsController;
+use App\Http\Resources\Miner\MinerTypeCollection;
+use App\Models\Miner;
+use App\Models\Miner\MinerPayout;
+use App\Models\Miner\MinerType;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,9 +28,14 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'stats' => [
-            'miners' => \App\Models\Miner::whereHas('payouts')->count(),
-            'payouts' => \App\Models\Miner\MinerPayout::whereHas('miner')->count(),
+            'miners' => Miner::whereHas('payouts')->count(),
+            'payouts' => MinerPayout::whereHas('miner')->count(),
         ],
+        'types' => new MinerTypeCollection(
+            MinerType::orderBy('name')
+                ->get()
+                ->keyBy('slug')
+            ),
     ]);
 });
 

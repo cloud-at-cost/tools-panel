@@ -64,16 +64,6 @@
           </nav>
         </div>
 
-        <!--
-                  Mobile menu, show/hide based on menu open state.
-
-                  Entering: "duration-150 ease-out"
-                    From: "opacity-0 scale-95"
-                    To: "opacity-100 scale-100"
-                  Leaving: "duration-100 ease-in"
-                    From: "opacity-100 scale-100"
-                    To: "opacity-0 scale-95"
-                -->
         <transition
           enter-active-class="duration-150 ease-out"
           enter-class="opacity-0 scale-95"
@@ -213,16 +203,31 @@
                 <li><strong>Payouts Logged</strong>: {{ stats.payouts }}</li>
               </ul>
             </div>
-            <div class="mt-12 -mb-10 sm:-mb-24 lg:-mb-80">
-              <div
-                id="chart"
-                style="height: 300px;"
-              />
+            <div class="mt-12">
+              <div class="flex flex-row p-4 justify-around">
+                <jet-button
+                  v-for="type in classes"
+                  :key="type"
+                  @click="minerType = type"
+                >
+                  {{ type }} Class
+                </jet-button>
+              </div>
 
-              <div
-                id="miner-prices"
-                style="height: 300px;"
-              />
+              <template
+                v-for="type in classes"
+                :key="type"
+              >
+                <average-payouts
+                  v-show="minerType === type"
+                  :miner-type="type"
+                />
+
+                <miner-prices
+                  v-show="minerType === type"
+                  :miner-type="type"
+                />
+              </template>
             </div>
           </div>
         </div>
@@ -270,41 +275,48 @@
 
 <script>
 import ApplicationLogo from "../Jetstream/ApplicationLogo";
+import JetButton from '../Jetstream/Button';
+import AveragePayouts from "@/Charts/AveragePayouts";
+import MinerPrices from "@/Charts/MinerPrices";
 export default {
-    components: {ApplicationLogo},
+    components: {MinerPrices, AveragePayouts, ApplicationLogo, JetButton},
     props: {
         canLogin: Boolean,
         canRegister: Boolean,
         stats: {
             type: Object,
             required: true
+        },
+        types: {
+            type: Object,
+            required: true,
         }
     },
 
     data: () => ({
         isOpen: false,
+        minerType: 'm',
+        charts: {
+            monthly: undefined,
+            prices: undefined
+        }
     }),
 
-    mounted() {
-        new Chartisan({
-            el: '#chart',
-            url: this.route('charts.all_payouts_chart'),
-            hooks: new ChartisanHooks()
-                .title('Average Payouts')
-                .tooltip(true)
-                .legend({ position: 'bottom' })
-                .datasets([{ type: 'line', fill: false }]),
-        });
+    computed: {
+        classes() {
+            return new Set(Object.keys(this.types)
+                .map(t => t[0])
+            );
+        },
 
-        new Chartisan({
-            el: '#miner-prices',
-            url: this.route('charts.price_history_chart'),
-            hooks: new ChartisanHooks()
-                .tooltip(true)
-                .legend({ position: 'bottom' })
-                .datasets([{ type: 'line', fill: false }]),
-        });
-    }
+        groupedTypes() {
+            return Object.values(this.types).reduce(function(rv, x) {
+                (rv[x['slug'][0]] = rv[x['slug'][0]] || []).push(x);
+                return rv;
+            }, {});
+        }
+    },
+
 }
 </script>
 
