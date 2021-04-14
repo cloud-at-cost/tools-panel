@@ -37,4 +37,9 @@ class Miner extends Model
     {
         $this->attributes['amount_paid'] = intval($value * 100);
     }
+
+    public static function scopeForUser($query, User $user)
+    {
+        $query->whereUserId($user->id);
+    }
 }
