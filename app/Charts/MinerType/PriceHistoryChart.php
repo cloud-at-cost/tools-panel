@@ -56,8 +56,9 @@ class PriceHistoryChart extends BaseChart
 
                 $data = [];
 
+                $previous = null;
                 foreach($dates as $key => $date) {
-                    $data[$key] = optional($prices[$date] ?? null)->price;
+                    $previous = $data[$key] = optional($prices[$date] ?? null)->price ?? $previous;
                 }
 
                 $chart->dataset($minerType->name, $data);
