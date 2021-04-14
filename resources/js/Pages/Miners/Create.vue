@@ -83,7 +83,6 @@
             v-model="form.miner_id"
             type="text"
             class="mt-1 block w-full"
-            required
           />
           <jet-input-error
             :message="form.errors.miner_id"
@@ -124,6 +123,60 @@
           />
           <jet-input-error
             :message="form.errors.amount_paid"
+            class="mt-2"
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-4">
+          <jet-label
+            for="purchase_date"
+            value="Purchase Date"
+          />
+          <jet-input
+            id="purchase_date"
+            v-model="form.purchase_date"
+            type="date"
+            min="2021-03-08"
+            class="mt-1 block w-full"
+          />
+          <jet-input-error
+            :message="form.errors.purchase_date"
+            class="mt-2"
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-4">
+          <jet-label
+            for="estimated_activation_date"
+            value="Estimated Activation Date"
+          />
+          <jet-input
+            id="estimated_activation_date"
+            v-model="form.estimated_activation_date"
+            type="date"
+            min="2021-03-14"
+            class="mt-1 block w-full"
+          />
+          <jet-input-error
+            :message="form.errors.estimated_activation_date"
+            class="mt-2"
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-4">
+          <jet-label
+            for="activation_date"
+            value="Activation Date"
+          />
+          <jet-input
+            id="activation_date"
+            v-model="form.activation_date"
+            type="date"
+            min="2021-03-14"
+            class="mt-1 block w-full"
+          />
+          <jet-input-error
+            :message="form.errors.activation_date"
             class="mt-2"
           />
         </div>
@@ -182,13 +235,16 @@
                     miner_id: '',
                     identifier: '',
                     amount_paid: 0,
+                    purchase_date: '',
+                    estimated_activation_date: '',
+                    activation_date: '',
                 }),
             }
         },
 
         computed: {
             canSubmit() {
-                return this.form.identifier && this.form.amount_paid && this.form.miner_id;
+                return this.form.identifier && this.form.amount_paid;
             }
         },
 

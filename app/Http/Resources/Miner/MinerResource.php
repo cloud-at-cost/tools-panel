@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Miner;
 
 use App\Models\Miner;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MinerResource extends JsonResource
@@ -25,6 +26,9 @@ class MinerResource extends JsonResource
             'identifier' => $miner->identifier,
             'amount_paid' => $miner->amount_paid,
             'type' => new MinerTypeResource($miner->type),
+            'purchase_date' => optional($miner->purchase_date)->toDateString(),
+            'estimated_activation_date' => optional($miner->estimated_activation_date)->toDateString(),
+            'activation_date' => optional($miner->activation_date)->toDateString(),
         ];
     }
 

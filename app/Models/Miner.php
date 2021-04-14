@@ -17,6 +17,12 @@ class Miner extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'purchase_date' => 'date',
+        'activation_date' => 'date',
+        'estimated_activation_date' => 'date'
+    ];
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(MinerType::class, 'miner_type_id');

@@ -14,7 +14,7 @@ class AddExtraDatesToMinersTable extends Migration
     public function up()
     {
         Schema::table('miners', function(Blueprint $table) {
-            $table->unsignedBigInteger('miner_type_id')
+            $table->string('miner_id', 50)
                     ->nullable()
                     ->change();
         });
@@ -48,7 +48,7 @@ class AddExtraDatesToMinersTable extends Migration
         });
 
         Schema::table('miners', function(Blueprint $table) {
-            $table->unsignedBigInteger('miner_type_id')
+            $table->string('miner_id', 50)
                 ->nullable(false)
                 ->change();
         });

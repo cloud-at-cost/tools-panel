@@ -59,6 +59,9 @@ class MinerController extends Controller
             'miner_id' => $request->input('miner_id'),
             'identifier' => $request->input('identifier'),
             'amount_paid' => $request->input('amount_paid'),
+            'purchase_date' => $request->input('purchase_date'),
+            'estimated_activation_date' => $request->input('estimated_activation_date'),
+            'activation_date' => $request->input('activation_date'),
             'user_id' => $request->user()->id,
         ]);
 

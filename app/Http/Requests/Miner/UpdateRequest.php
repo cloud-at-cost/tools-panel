@@ -31,7 +31,6 @@ class UpdateRequest extends FormRequest
                 Rule::exists('miner_types', 'slug')
             ],
             'miner_id' => [
-                'required',
                 Rule::unique('miners', 'miner_id')
                     ->ignoreModel($this->route('miner'))
                     ->whereNull('deleted_at')
@@ -45,7 +44,22 @@ class UpdateRequest extends FormRequest
             'amount_paid' => [
                 'required',
                 'numeric',
-            ]
+            ],
+            'purchase_date' => [
+                'nullable',
+                'date',
+                'after_or_equal:2021-03-08'
+            ],
+            'estimated_activation_date' => [
+                'nullable',
+                'date',
+                'after_or_equal:2021-03-13'
+            ],
+            'activation_date' => [
+                'nullable',
+                'date',
+                'after_or_equal:2021-03-13'
+            ],
         ];
     }
 
