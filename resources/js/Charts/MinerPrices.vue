@@ -4,6 +4,7 @@
       Miner Prices
     </h3>
     <div
+      v-if="!refresh"
       ref="chart"
       style="height: 300px;"
     />
@@ -15,28 +16,75 @@ export default {
     name: "MinerPrices",
 
     props: {
-       minerType: {
+        minerType: {
            type: String,
            required: true,
-       }
+        },
+        startDate: {
+            type: String,
+            required: true,
+        },
+        endDate: {
+            type: String,
+            required: true,
+        }
     },
 
     data:() => ({
-        chart: undefined
+        chart: undefined,
+        refresh: false,
     }),
 
-    mounted() {
-         this.chart = new Chartisan({
-            el: this.$refs.chart,
-            url: this.route('charts.price_history_chart', {
-                start: '2021-03-01',
+    computed: {
+        url() {
+            return this.route('charts.price_history_chart', {
+                startDate: this.startDate,
+                endDate: this.endDate,
                 class: this.minerType
-            }),
+            })
+        }
+    },
+
+    watch: {
+        startDate(){
+            this.updateGraph();
+        },
+        endDate() {
+            this.updateGraph();
+        }
+    },
+
+    mounted() {
+        this.chart = new Chartisan({
+            el: this.$refs.chart,
+            url: this.url,
             hooks: new ChartisanHooks()
                 .tooltip(true)
                 .legend({ position: 'bottom' })
                 .datasets([{ type: 'line', fill: false }]),
         });
+    },
+
+    methods: {
+        updateGraph() {
+            this.refresh = true;
+
+            // This is a ugly hack to get it to refresh without an error
+            this.$nextTick(() => {
+                this.refresh = false;
+
+                this.$nextTick(() => {
+                    this.chart = new Chartisan({
+                        el: this.$refs.chart,
+                        url: this.url,
+                        hooks: new ChartisanHooks()
+                            .tooltip(true)
+                            .legend({ position: 'bottom' })
+                            .datasets([{ type: 'line', fill: false }]),
+                    });
+                });
+            });
+        }
     }
 }
 </script>

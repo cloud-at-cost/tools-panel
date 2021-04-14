@@ -214,6 +214,25 @@
                 </jet-button>
               </div>
 
+              <div class="flex flex-row p-4 justify-around">
+                <div>
+                  <strong>Start Date</strong>:<br>
+                  <input
+                    v-model="dates.startDate"
+                    type="date"
+                    min="2021-03-14"
+                  >
+                </div>
+                <div>
+                  <strong>End Date</strong>:<br>
+                  <input
+                    v-model="dates.endDate"
+                    type="date"
+                    min="2021-03-14"
+                  >
+                </div>
+              </div>
+
               <template
                 v-for="type in classes"
                 :key="type"
@@ -221,11 +240,15 @@
                 <average-payouts
                   v-show="minerType === type"
                   :miner-type="type"
+                  :start-date="dates.startDate"
+                  :end-date="dates.endDate"
                 />
 
                 <miner-prices
                   v-show="minerType === type"
                   :miner-type="type"
+                  :start-date="dates.startDate"
+                  :end-date="dates.endDate"
                 />
               </template>
             </div>
@@ -278,8 +301,9 @@ import ApplicationLogo from "../Jetstream/ApplicationLogo";
 import JetButton from '../Jetstream/Button';
 import AveragePayouts from "@/Charts/AveragePayouts";
 import MinerPrices from "@/Charts/MinerPrices";
+import Input from "@/Jetstream/Input";
 export default {
-    components: {MinerPrices, AveragePayouts, ApplicationLogo, JetButton},
+    components: {Input, MinerPrices, AveragePayouts, ApplicationLogo, JetButton},
     props: {
         canLogin: Boolean,
         canRegister: Boolean,
@@ -293,14 +317,29 @@ export default {
         }
     },
 
-    data: () => ({
-        isOpen: false,
-        minerType: 'm',
-        charts: {
-            monthly: undefined,
-            prices: undefined
+    data: () => {
+        const today = new Date();
+        const startDate = new Date(new Date().setDate(today.getDate()-30));
+
+        const pad = function(n, width, z) {
+            z = z || '0';
+            n = n + '';
+            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
         }
-    }),
+
+        return {
+            isOpen: false,
+            minerType: 'm',
+            charts: {
+                monthly: undefined,
+                prices: undefined
+            },
+            dates: {
+                startDate: `${startDate.getFullYear()}-${pad(startDate.getMonth() + 1, 2)}-${pad(startDate.getDate(), 2)}`,
+                endDate: `${today.getFullYear()}-${pad(today.getMonth() + 1, 2)}-${pad(today.getDate(), 2)}`,
+            }
+        };
+    },
 
     computed: {
         classes() {
