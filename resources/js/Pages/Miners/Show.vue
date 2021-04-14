@@ -42,6 +42,9 @@
       <li><strong>Package ID</strong>: {{ miner.identifier }}</li>
       <li><strong>Amount Paid</strong>: {{ miner.amount_paid }}</li>
       <li><strong>Type</strong>: {{ miner.type.name }}</li>
+      <li><strong>Purchase Date</strong>: {{ miner.purchase_date }}</li>
+      <li><strong>Estimated Activation Date</strong>: {{ miner.estimated_activation_date }}</li>
+      <li><strong>Activation Date</strong>: {{ miner.activation_date }}</li>
     </ul>
 
     <div class="border-t border-gray-100 mt-10 mb-10" />
