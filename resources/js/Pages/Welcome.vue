@@ -220,7 +220,7 @@
                   <input
                     v-model="dates.startDate"
                     type="date"
-                    min="2021-03-14"
+                    min="2021-03-01"
                   >
                 </div>
                 <div>
@@ -228,7 +228,7 @@
                   <input
                     v-model="dates.endDate"
                     type="date"
-                    min="2021-03-14"
+                    min="2021-03-01"
                   >
                 </div>
               </div>
