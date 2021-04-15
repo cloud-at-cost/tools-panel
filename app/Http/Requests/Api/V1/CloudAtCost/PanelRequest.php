@@ -47,11 +47,12 @@ class PanelRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {
-            if(
+            if (
                 !is_string($this->get('credentials')) ||
                 count(explode(':', base64_decode($this->get('credentials')))) != 2
-            )  {
-                $validator->errors()->add('credentials', 'Please send your credentials base64-encoded separated by a colon (:)');
+            ) {
+                $validator->errors()->add('credentials',
+                    'Please send your credentials base64-encoded separated by a colon (:)');
             }
         });
     }

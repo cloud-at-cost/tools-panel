@@ -37,13 +37,28 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     protected function configurePermissions()
     {
-        Jetstream::defaultApiTokenPermissions(['read']);
+        Jetstream::defaultApiTokenPermissions([
+            'read',
+        ]);
 
         Jetstream::permissions([
+            /* global permissions */
             'create',
             'read',
             'update',
             'delete',
+
+            /* miner specific permissions */
+            'miner:create',
+            'miner:read',
+            'miner:update',
+            'miner:delete',
+
+            /* virtual machine specific permissions */
+            'virtual-machine:create',
+            'virtual-machine:read',
+            'virtual-machine:update',
+            'virtual-machine:delete',
         ]);
     }
 }

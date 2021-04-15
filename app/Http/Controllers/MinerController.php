@@ -10,9 +10,6 @@ use App\Http\Resources\Miner\MinerResource;
 use App\Http\Resources\Miner\MinerTypeCollection;
 use App\Models\Miner;
 use App\Models\Miner\MinerType;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Inertia;
 
 class MinerController extends Controller
@@ -49,7 +46,7 @@ class MinerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreateRequest  $request
+     * @param CreateRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
@@ -73,7 +70,7 @@ class MinerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Miner $miner
+     * @param Miner $miner
      * @return \Inertia\Response
      */
     public function show(Miner $miner)
@@ -90,7 +87,7 @@ class MinerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Miner $miner
+     * @param Miner $miner
      * @return \Inertia\Response
      */
     public function edit(Miner $miner)
@@ -107,18 +104,17 @@ class MinerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Miner $miner
+     * @param \Illuminate\Http\Request $request
+     * @param Miner $miner
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateRequest $request, Miner $miner)
     {
         collect($request->validated())
-            ->each(function($value, $key) use($request, $miner) {
-                if($key === 'type') {
+            ->each(function ($value, $key) use ($request, $miner) {
+                if ($key === 'type') {
                     $miner->miner_type_id = $request->type()->id;
-                }
-                else {
+                } else {
                     $miner->$key = $value;
                 }
             });
@@ -133,7 +129,7 @@ class MinerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Miner $miner
+     * @param Miner $miner
      * @return \Illuminate\Http\Response
      */
     public function destroy(Miner $miner)

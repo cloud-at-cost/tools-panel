@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Charts\MinerType;
 
@@ -36,14 +36,14 @@ class PriceHistoryChart extends BaseChart
 
         MinerType::orderBy('name')
             ->get()
-            ->filter(function(MinerType $minerType) use($request) {
-                if(empty($request->get('class'))) {
+            ->filter(function (MinerType $minerType) use ($request) {
+                if (empty($request->get('class'))) {
                     return true;
                 }
 
                 return $minerType->slug[0] === $request->get('class');
             })
-            ->each(function(MinerType $minerType) use($dates, $chart, $request, $startDate, $endDate) {
+            ->each(function (MinerType $minerType) use ($dates, $chart, $request, $startDate, $endDate) {
                 $prices = $minerType->priceHistory()
                     ->where('created_at', '>=', $startDate)
                     ->where('created_at', '<=', $endDate)
@@ -57,7 +57,7 @@ class PriceHistoryChart extends BaseChart
                 $data = [];
 
                 $previous = null;
-                foreach($dates as $key => $date) {
+                foreach ($dates as $key => $date) {
                     $previous = $data[$key] = optional($prices[$date] ?? null)->price ?? $previous;
                 }
 

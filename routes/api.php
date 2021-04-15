@@ -28,5 +28,8 @@ Route::group([
     ], function() {
         Route::post('', [VirtualMachineController::class, 'index'])
             ->name('cloud-at-cost.virtual-machines');
+
+        Route::delete('{server}', [VirtualMachineController::class, 'delete'])
+            ->name('cloud-at-cost.virtual-machines.delete');
     });
 });

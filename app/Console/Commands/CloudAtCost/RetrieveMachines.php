@@ -5,8 +5,6 @@ namespace App\Console\Commands\CloudAtCost;
 use App\DataTransfer\CloudAtCost\VirtualMachine;
 use App\Services\CloudAtCost\PanelClient;
 use App\Services\CloudAtCost\VirtualMachineClient;
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Console\Command;
 
 class RetrieveMachines extends Command
@@ -27,21 +25,6 @@ class RetrieveMachines extends Command
 
     private VirtualMachineClient $client;
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new VirtualMachineClient(
-            new PanelClient(
-                config('cloud-at-cost.panel.username'),
-                config('cloud-at-cost.panel.password'),
-            )
-        );
-    }
 
     /**
      * Execute the console command.
@@ -50,6 +33,13 @@ class RetrieveMachines extends Command
      */
     public function handle()
     {
+        $this->client = new VirtualMachineClient(
+            new PanelClient(
+                config('cloud-at-cost.panel.username'),
+                config('cloud-at-cost.panel.password'),
+            )
+        );
+
         $this->table(
             array_keys(get_class_vars(VirtualMachine::class)),
             $this->client->retrieve()

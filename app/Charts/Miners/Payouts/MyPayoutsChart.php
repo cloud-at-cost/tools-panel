@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Charts\Miners\Payouts;
 
@@ -37,7 +37,7 @@ class MyPayoutsChart extends BaseChart
             ->with('type')
             ->get()
             ->sortBy(fn(Miner $miner) => $miner->type->name)
-            ->each(function(Miner $miner) use($chart, $dates, &$types) {
+            ->each(function (Miner $miner) use ($chart, $dates, &$types) {
                 $payouts = $miner->payouts()
                     ->deposits()
                     ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
@@ -45,13 +45,13 @@ class MyPayoutsChart extends BaseChart
                     ->get()
                     ->keyBy('created');
 
-                if($payouts->count() === 0) {
+                if ($payouts->count() === 0) {
                     return;
                 }
 
                 $data = [];
 
-                foreach($dates as $key => $date) {
+                foreach ($dates as $key => $date) {
                     $data[$key] = optional($payouts[$date] ?? null)->amount;
                 }
 
@@ -60,13 +60,13 @@ class MyPayoutsChart extends BaseChart
                     $data
                 );
 
-                if(!array_key_exists($miner->type->hash, $types)) {
+                if (!array_key_exists($miner->type->hash, $types)) {
                     $types[$miner->type->hash] = $miner->type;
                 }
             });
 
         collect($types)
-            ->each(function(MinerType $minerType) use($chart, $dates) {
+            ->each(function (MinerType $minerType) use ($chart, $dates) {
                 $data = [];
                 $previous = null;
 
@@ -77,7 +77,7 @@ class MyPayoutsChart extends BaseChart
                     ->get()
                     ->keyBy('created');
 
-                foreach($dates as $key => $date) {
+                foreach ($dates as $key => $date) {
                     $converted = Carbon::createFromFormat("Y-m-d H", $date)->toDateString();
                     $previous = $data[$key] = (optional($payouts[$converted] ?? null)->amount) ?? $previous;
                 }

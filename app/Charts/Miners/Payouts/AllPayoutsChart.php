@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Charts\Miners\Payouts;
 
@@ -37,15 +37,15 @@ class AllPayoutsChart extends BaseChart
 
         MinerType::orderBy('name')
             ->get()
-            ->filter(function(MinerType $minerType) use($request) {
-                if(empty($request->get('class'))) {
+            ->filter(function (MinerType $minerType) use ($request) {
+                if (empty($request->get('class'))) {
                     return true;
                 }
 
                 return $minerType->slug[0] === $request->get('class');
             })
-            ->each(function(MinerType $minerType) use($dates, $chart, $request, $startDate, $endDate) {
-                if(Miner::whereMinerTypeId($minerType->id)->count() < 2) {
+            ->each(function (MinerType $minerType) use ($dates, $chart, $request, $startDate, $endDate) {
+                if (Miner::whereMinerTypeId($minerType->id)->count() < 2) {
                     return;
                 }
 
@@ -59,13 +59,13 @@ class AllPayoutsChart extends BaseChart
                     ->get()
                     ->keyBy('created');
 
-                if($payouts->count() === 0) {
+                if ($payouts->count() === 0) {
                     return;
                 }
 
                 $data = [];
 
-                foreach($dates as $key => $date) {
+                foreach ($dates as $key => $date) {
                     $data[$key] = optional($payouts[$date] ?? null)->amount;
                 }
 

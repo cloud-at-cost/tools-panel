@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1\CloudAtCost;
 use App\Http\Controllers\Controller;
 use App\Models\CloudAtCost\Server\Platform;
 use App\Models\CloudAtCost\Server\PlatformOperatingSystem;
-use Illuminate\Http\Request;
 
 class PlatformOperatingSystemController extends Controller
 {
