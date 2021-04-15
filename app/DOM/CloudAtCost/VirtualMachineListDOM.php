@@ -18,7 +18,7 @@ class VirtualMachineListDOM
 
     public string $identifier;
     public string $name;
-    public bool $isUp;
+    public string $status;
     public string $operatingSystem;
     public string $ipV4;
     public string $ipV6;
@@ -54,7 +54,7 @@ class VirtualMachineListDOM
 
         [, $this->identifier, $colour, $this->name] = $matches;
 
-        $this->isUp = $colour === State::UP;
+        $this->status = $colour === 'green' ? State::UP : State::DOWN;
     }
 
     private function deriveOperatingSystem(): void

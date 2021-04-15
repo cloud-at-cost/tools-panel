@@ -8,7 +8,7 @@ class VirtualMachine
 {
     public string $identifier;
     public string $name;
-    public bool $isUp;
+    public string $status;
     public string $operatingSystem;
     public string $ipV4;
     public string $ipV6;
