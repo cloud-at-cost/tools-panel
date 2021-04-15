@@ -26,7 +26,7 @@ Route::group([
     Route::group([
         'prefix' => 'virtual-machine',
     ], function() {
-        Route::get('', [VirtualMachineController::class, 'index'])
+        Route::post('', [VirtualMachineController::class, 'index'])
             ->name('cloud-at-cost.virtual-machines');
     });
 });
