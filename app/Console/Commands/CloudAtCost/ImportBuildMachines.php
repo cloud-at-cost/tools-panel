@@ -5,6 +5,7 @@ namespace App\Console\Commands\CloudAtCost;
 use App\DataTransfer\CloudAtCost\OperatingSystem;
 use App\DataTransfer\CloudAtCost\ServerClassification;
 use App\Models\CloudAtCost\Server\Platform;
+use App\Services\CloudAtCost\PanelClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Console\Command;
@@ -24,11 +25,9 @@ class ImportBuildMachines extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Imports all of the Build Machine information';
 
-    private Client $client;
-
-    private CookieJar $cookieJar;
+    private PanelClient $client;
 
     private array $headers = [
         "User-Agent" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36",
@@ -42,8 +41,12 @@ class ImportBuildMachines extends Command
     public function __construct(Client $client, CookieJar $cookieJar)
     {
         parent::__construct();
-        $this->client = $client;
-        $this->cookieJar = $cookieJar;
+        $this->client = new PanelClient(
+            config('cloud-at-cost.panel.username'),
+            config('cloud-at-cost.panel.password'),
+            $client,
+            $cookieJar,
+        );
     }
 
     /**
@@ -53,8 +56,6 @@ class ImportBuildMachines extends Command
      */
     public function handle()
     {
-        $this->login();
-
         $this->findBuildButtons()
             ->each(fn(ServerClassification $classification) => $this->hydrateOperatingSystems($classification))
             ->each(fn(ServerClassification $classification) => $this->saveUpdates($classification));
@@ -62,32 +63,11 @@ class ImportBuildMachines extends Command
         return 0;
     }
 
-    private function login()
-    {
-        $this->client
-            ->post(
-                $this->buildUrl('manage-check2.php'), [
-                    'form_params' => [
-                        'username' => config('cloud-at-cost.panel.username'),
-                        'password' => config('cloud-at-cost.panel.password'),
-                        'submit' => 'Login',
-                    ],
-                    'headers' => $this->headers,
-                    'cookies' => $this->cookieJar,
-                ]
-            );
-    }
-
     private function findBuildButtons(): Collection
     {
         $data = collect();
-        $response = $this->client->get(
-            $this->buildUrl('build'), [
-            'cookies' => $this->cookieJar,
-            'headers' => $this->headers,
-        ]);
+        $contents = $this->client->get('build');
 
-        $contents = $response->getBody()->getContents();
         $matches = [];
         preg_match('/<form name=\'build\' [^>]+>(.*)<\/form>/i', $contents, $matches);
 
@@ -111,13 +91,8 @@ class ImportBuildMachines extends Command
 
     private function hydrateOperatingSystems(ServerClassification $classification)
     {
-        $response = $this->client->get(
-            $this->buildUrl('build'), [
-            'cookies' => $this->cookieJar,
-            'headers' => $this->headers,
-        ]);
+        $contents = $this->client->get('build');
 
-        $contents = $response->getBody()->getContents();
         $matches = [];
         preg_match('/<form name=\'build\' [^>]+>(.*)<\/form>/i', $contents, $matches);
 
@@ -128,18 +103,12 @@ class ImportBuildMachines extends Command
         preg_match('/<button[^>]*value=[\'"]([A-Z0-9]*)[\'"][^>]*>Build to ' . $classification->name .
             '[A-Z0-9 ()\-]*<\/button>/i', $matches[1], $buttons);
 
-
-        $response = $this->client->post(
-            $this->buildUrl('build'), [
-            'cookies' => $this->cookieJar,
-            'headers' => $this->headers,
-            'form_params' => [
+        $contents = $this->client->post(
+            'build',
+            [
                 'infra' => $buttons[1],
                 'token' => $tokens[1],
-            ]
-        ]);
-
-        $contents = $response->getBody()->getContents();
+            ]);
 
         $select = [];
         preg_match('/<select[^>]*name=\'os\'[^>]*>(.*)<\/select>/i', $contents, $select);
@@ -173,10 +142,5 @@ class ImportBuildMachines extends Command
                 $os->identifier = $operatingSystem->id;
                 $os->save();
             });
-    }
-
-    private function buildUrl(string $url): string
-    {
-        return "https://panel.cloudatcost.com/$url";
     }
 }
