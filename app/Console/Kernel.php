@@ -6,6 +6,7 @@ use App\Console\Commands\Bitcoin\UpdateMarketValue;
 use App\Console\Commands\CloudAtCost\ImportBuildMachines;
 use App\Console\Commands\CloudAtCost\ImportPrices;
 use App\Console\Commands\CloudAtCost\ImportWalletBalances;
+use App\Console\Commands\CloudAtCost\RetrieveMachines;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         ImportPrices::class,
         ImportBuildMachines::class,
         ImportWalletBalances::class,
+        RetrieveMachines::class,
     ];
 
     /**
