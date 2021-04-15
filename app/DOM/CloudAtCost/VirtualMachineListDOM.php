@@ -20,6 +20,8 @@ class VirtualMachineListDOM
     public int $ramUsage;
     public int $diskInGB;
     public int $diskUsage;
+    public string $version;
+
     private string $body;
 
     public function __construct(string $body)
@@ -36,6 +38,7 @@ class VirtualMachineListDOM
         $this->deriveCPU();
         $this->deriveRAM();
         $this->deriveDisk();
+        $this->deriveCloudPROVersion();
     }
 
     private function deriveNameDetails(): void
@@ -126,5 +129,18 @@ class VirtualMachineListDOM
         );
 
         [, $this->diskInGB, $this->diskUsage] = $matches;
+    }
+
+    private function deriveCloudPROVersion()
+    {
+        $regex = '/(CloudPRO v\d+)/i';
+        $matches = [];
+        preg_match(
+            $regex,
+            $this->body,
+            $matches
+        );
+
+        [, $this->version] = $matches;
     }
 }

@@ -21,4 +21,6 @@ class VirtualMachine
 
     public int $diskInGB;
     public int $diskUsage;
+
+    public string $version;
 }
