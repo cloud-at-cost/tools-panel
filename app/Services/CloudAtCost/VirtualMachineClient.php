@@ -4,6 +4,7 @@ namespace App\Services\CloudAtCost;
 
 use App\DataTransfer\CloudAtCost\VirtualMachine;
 use App\DOM\CloudAtCost\VirtualMachineListDOM;
+use App\Enumerations\VirtualMachine\PowerState;
 use Illuminate\Support\Collection;
 use KubAT\PhpSimple\HtmlDomParser;
 
@@ -14,6 +15,24 @@ class VirtualMachineClient
     public function __construct(PanelClient $client)
     {
         $this->client = $client;
+    }
+
+    public function find(string $server): ?VirtualMachine
+    {
+        return $this->retrieve()
+            ->first(fn(VirtualMachine $virtualMachine) => $virtualMachine->identifier == $server);
+    }
+
+    public function updateState(VirtualMachine $virtualMachine, string $state)
+    {
+        $this->client->get(
+            $this->configUrl('powerCycle.php'),
+            [
+                'sid' => $virtualMachine->identifier,
+                'vmname' => $virtualMachine->vmname,
+                'cycle' => PowerState::toCloudAtCost($state)
+            ]
+        );
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Enumerations\VirtualMachine\State;
 class VirtualMachineListDOM
 {
     public string $identifier;
+    public string $vmname;
     public string $name;
     public string $status;
     public string $operatingSystem;
@@ -32,6 +33,7 @@ class VirtualMachineListDOM
 
     private function parse()
     {
+        $this->deriveVMName();
         $this->deriveNameDetails();
         $this->deriveOperatingSystem();
         $this->deriveIpAddresses();
@@ -39,6 +41,19 @@ class VirtualMachineListDOM
         $this->deriveRAM();
         $this->deriveDisk();
         $this->deriveCloudPROVersion();
+    }
+
+    private function deriveVMName(): void
+    {
+        $regex = '/vmname=([\w-]+)/i';
+        $matches = [];
+        preg_match(
+            $regex,
+            $this->body,
+            $matches
+        );
+
+        [, $this->vmname] = $matches;
     }
 
     private function deriveNameDetails(): void
