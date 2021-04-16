@@ -13,8 +13,11 @@ class PanelClient
     private Client $client;
     private CookieJar $cookieJar;
 
+    private array $customer;
+
     private array $headers = [
         "User-Agent" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36",
+        'Referer' => 'https://panel.cloudatcost.com/'
     ];
 
     public function __construct(string $username, string $password, Client $client = null, CookieJar $cookieJar = null)
@@ -27,10 +30,14 @@ class PanelClient
         $this->login();
     }
 
-    public function post(string $url, array $data): string
+    public function post(string $url, array $data, bool $isSecure = false): string
     {
         if(empty($this->cookieJar->toArray())) {
             $this->login();
+        }
+
+        if($isSecure) {
+            $data['cid'] = $this->customer['id'];
         }
 
         return $this->client->post(
@@ -43,14 +50,18 @@ class PanelClient
         )->getBody()->getContents();
     }
 
-    public function get(string $url): string
+    public function get(string $url, array $parameters = [], bool $isSecure = false): string
     {
         if(!$this->cookieJar || empty($this->cookieJar->toArray())) {
             $this->login();
         }
 
+        if($isSecure) {
+            $parameters['cid'] = $this->customer['id'];
+        }
+
         return $this->client->get(
-            $this->buildUrl($url),
+            $this->buildUrl($url) . "?" . http_build_query($parameters),
             [
                 'cookies' => $this->cookieJar,
                 'headers' => $this->headers,
@@ -60,7 +71,9 @@ class PanelClient
 
     private function login()
     {
-        $cookies = cache()->remember("credentials:" . md5($this->username . $this->password), now()->addMinutes(10),
+        [$cookies, $this->customer] = cache()->remember(
+            "credentials:" . md5($this->username . $this->password),
+            now()->addMinutes(60),
             function() {
             $cookies = new CookieJar();
 
@@ -77,7 +90,29 @@ class PanelClient
                     ]
                 );
 
-            return $cookies->toArray();
+            $script = $this->client
+                ->get($this->buildUrl('/script'), [
+                    'headers' => $this->headers,
+                    'cookies' => $cookies,
+                ])
+                ->getBody()->getContents();
+
+            $matches = [];
+            preg_match(
+                '/<input[^>]+name=\'cid\'[^>]+value=\'(\w+)\'>\s+<input[^>]+name=\'u\'[^>]+value=\'([\w@.+]+)\'>/i',
+                $script,
+                $matches
+            );
+
+            [,$customerId, $email] = $matches;
+
+            return [
+                $cookies->toArray(),
+                [
+                    'id' => $customerId,
+                    'email' => $email,
+                ]
+            ];
         });
 
         foreach($cookies as $cookie) {

@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Miner\MinerPayoutCollection;
 use App\Models\Bitcoin\BitcoinMarketValue;
-use App\Models\Miner;
 use App\Models\Miner\MinerPayout;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Inertia;
 
 class PayoutsController extends Controller
@@ -49,29 +47,28 @@ class PayoutsController extends Controller
 
         $validPayouts = $payouts->filter(fn($payout) => isset($availableMiners[$payout->packageID]));
 
-        $validPayouts->each(function($payout) use($availableMiners, &$existing, &$new) {
-                $miner = $availableMiners[$payout->packageID];
+        $validPayouts->each(function ($payout) use ($availableMiners, &$existing, &$new) {
+            $miner = $availableMiners[$payout->packageID];
 
-                $actual = $miner->payouts()
-                    ->whereCreatedAt($payout->date)
-                    ->whereType($payout->type)
-                    ->firstOrNew();
+            $actual = $miner->payouts()
+                ->whereCreatedAt($payout->date)
+                ->whereType($payout->type)
+                ->firstOrNew();
 
-                if($actual->exists) {
-                    $existing++;
-                }
-                else {
-                    $new++;
-                }
+            if ($actual->exists) {
+                $existing++;
+            } else {
+                $new++;
+            }
 
-                $actual->created_at = $payout->date;
-                $actual->type = $payout->type;
-                $actual->amount = $payout->amount;
+            $actual->created_at = $payout->date;
+            $actual->type = $payout->type;
+            $actual->amount = $payout->amount;
 
-                $actual->save();
-            });
+            $actual->save();
+        });
 
-        if($request->get('api')) {
+        if ($request->get('api')) {
             return [
                 'total' => $payouts->count(),
                 'successful' => $validPayouts->count(),

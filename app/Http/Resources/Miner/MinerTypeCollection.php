@@ -6,6 +6,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class MinerTypeCollection extends ResourceCollection
 {
-    public $collects = MinerTypeResource::class;
     public static $wrap = false;
+    public $collects = MinerTypeResource::class;
 }

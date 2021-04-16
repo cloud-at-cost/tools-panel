@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Miner;
 
 use App\Models\Miner;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MinerResource extends JsonResource
@@ -13,7 +12,7 @@ class MinerResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)

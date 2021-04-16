@@ -15,21 +15,6 @@ class MinerPayout extends Model
 
     protected $guarded = [];
 
-    public function miner(): BelongsTo
-    {
-        return $this->belongsTo(Miner::class);
-    }
-
-    public function getAmountAttribute(): float
-    {
-        return intval($this->attributes['amount']) / 100000000;
-    }
-
-    public function setAmountAttribute(float $value)
-    {
-        $this->attributes['amount'] = $value * 100000000;
-    }
-
     public static function scopeForUser($query, User $user)
     {
         $query->whereHas('miner', fn($q) => $q->whereUserId($user->id));
@@ -43,5 +28,20 @@ class MinerPayout extends Model
     public static function scopeForType($query, MinerType $minerType)
     {
         $query->whereHas('miner', fn($q) => $q->whereMinerTypeId($minerType->id));
+    }
+
+    public function miner(): BelongsTo
+    {
+        return $this->belongsTo(Miner::class);
+    }
+
+    public function getAmountAttribute(): float
+    {
+        return intval($this->attributes['amount']) / 100000000;
+    }
+
+    public function setAmountAttribute(float $value)
+    {
+        $this->attributes['amount'] = $value * 100000000;
     }
 }

@@ -8,6 +8,21 @@ use App\Enumerations\VirtualMachine\State;
 
 class VirtualMachineListDOM
 {
+    public string $identifier;
+    public string $vmname;
+    public string $name;
+    public string $status;
+    public string $operatingSystem;
+    public string $ipV4;
+    public string $ipV6;
+    public int $numberOfCPUs;
+    public int $cpuUsage;
+    public int $ramInMB;
+    public int $ramUsage;
+    public int $diskInGB;
+    public int $diskUsage;
+    public string $version;
+
     private string $body;
 
     public function __construct(string $body)
@@ -16,30 +31,29 @@ class VirtualMachineListDOM
         $this->parse();
     }
 
-    public string $identifier;
-    public string $name;
-    public string $status;
-    public string $operatingSystem;
-    public string $ipV4;
-    public string $ipV6;
-
-    public int $numberOfCPUs;
-    public int $cpuUsage;
-
-    public int $ramInMB;
-    public int $ramUsage;
-
-    public int $diskInGB;
-    public int $diskUsage;
-
     private function parse()
     {
+        $this->deriveVMName();
         $this->deriveNameDetails();
         $this->deriveOperatingSystem();
         $this->deriveIpAddresses();
         $this->deriveCPU();
         $this->deriveRAM();
         $this->deriveDisk();
+        $this->deriveCloudPROVersion();
+    }
+
+    private function deriveVMName(): void
+    {
+        $regex = '/vmname=([\w-]+)/i';
+        $matches = [];
+        preg_match(
+            $regex,
+            $this->body,
+            $matches
+        );
+
+        [, $this->vmname] = $matches;
     }
 
     private function deriveNameDetails(): void
@@ -130,5 +144,18 @@ class VirtualMachineListDOM
         );
 
         [, $this->diskInGB, $this->diskUsage] = $matches;
+    }
+
+    private function deriveCloudPROVersion()
+    {
+        $regex = '/(CloudPRO v\d+)/i';
+        $matches = [];
+        preg_match(
+            $regex,
+            $this->body,
+            $matches
+        );
+
+        [, $this->version] = $matches;
     }
 }

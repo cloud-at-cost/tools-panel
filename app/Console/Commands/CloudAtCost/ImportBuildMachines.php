@@ -6,8 +6,6 @@ use App\DataTransfer\CloudAtCost\OperatingSystem;
 use App\DataTransfer\CloudAtCost\ServerClassification;
 use App\Models\CloudAtCost\Server\Platform;
 use App\Services\CloudAtCost\PanelClient;
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
@@ -29,26 +27,6 @@ class ImportBuildMachines extends Command
 
     private PanelClient $client;
 
-    private array $headers = [
-        "User-Agent" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36",
-    ];
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(Client $client, CookieJar $cookieJar)
-    {
-        parent::__construct();
-        $this->client = new PanelClient(
-            config('cloud-at-cost.panel.username'),
-            config('cloud-at-cost.panel.password'),
-            $client,
-            $cookieJar,
-        );
-    }
-
     /**
      * Execute the console command.
      *
@@ -56,6 +34,11 @@ class ImportBuildMachines extends Command
      */
     public function handle()
     {
+        $this->client = new PanelClient(
+            config('cloud-at-cost.panel.username'),
+            config('cloud-at-cost.panel.password'),
+        );
+
         $this->findBuildButtons()
             ->each(fn(ServerClassification $classification) => $this->hydrateOperatingSystems($classification))
             ->each(fn(ServerClassification $classification) => $this->saveUpdates($classification));
