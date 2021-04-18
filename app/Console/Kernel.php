@@ -7,6 +7,7 @@ use App\Console\Commands\CloudAtCost\ImportBuildMachines;
 use App\Console\Commands\CloudAtCost\ImportPrices;
 use App\Console\Commands\CloudAtCost\ImportWalletBalances;
 use App\Console\Commands\CloudAtCost\RetrieveMachines;
+use App\Console\Commands\MinerType\AverageThirtyDayPayout;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         ImportBuildMachines::class,
         ImportWalletBalances::class,
         RetrieveMachines::class,
+        AverageThirtyDayPayout::class,
     ];
 
     /**
@@ -41,6 +43,8 @@ class Kernel extends ConsoleKernel
             ->daily();
         $schedule->command(ImportWalletBalances::class)
             ->everySixHours();
+        $schedule->command(AverageThirtyDayPayout::class)
+            ->hourly();
     }
 
     /**

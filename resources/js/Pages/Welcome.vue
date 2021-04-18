@@ -250,6 +250,26 @@
                   :start-date="dates.startDate"
                   :end-date="dates.endDate"
                 />
+
+                <div
+                  v-if="minerType === type"
+                  class="text-left "
+                >
+                  <h3 class="text-left p-2">
+                    Estimated Monthly Payouts
+                  </h3>
+                  <small>Updated hourly, calculated using all of the miner payouts by classification type.</small>
+
+                  <ul>
+                    <li
+                      v-for="minerDetails in groupedTypes[type]"
+                      :key="minerDetails.slug"
+                      class="w-1/3 inline-block pb-3 pt-3"
+                    >
+                      <strong>{{ minerDetails.name }}</strong>: ${{ format(minerDetails.estimated_usd) }} USD
+                    </li>
+                  </ul>
+                </div>
               </template>
             </div>
           </div>
@@ -303,7 +323,7 @@ import AveragePayouts from "@/Charts/AveragePayouts";
 import MinerPrices from "@/Charts/MinerPrices";
 import Input from "@/Jetstream/Input";
 export default {
-    components: {Input, MinerPrices, AveragePayouts, ApplicationLogo, JetButton},
+    components: {MinerPrices, AveragePayouts, ApplicationLogo, JetButton},
     props: {
         canLogin: Boolean,
         canRegister: Boolean,
@@ -349,12 +369,20 @@ export default {
         },
 
         groupedTypes() {
-            return Object.values(this.types).reduce(function(rv, x) {
-                (rv[x['slug'][0]] = rv[x['slug'][0]] || []).push(x);
-                return rv;
+            return Object.values(this.types)
+                .sort((a, b) => a.classification > b.classification ? -1 : 1)
+                .reduce(function(rv, x) {
+                    (rv[x['slug'][0]] = rv[x['slug'][0]] || []).push(x);
+                    return rv;
             }, {});
         }
     },
+
+    methods: {
+        format(value) {
+            return new Intl.NumberFormat().format(Math.round(value * 100, 2) / 100);
+        }
+    }
 
 }
 </script>
