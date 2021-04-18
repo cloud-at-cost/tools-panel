@@ -13,6 +13,10 @@
             id="my-payouts"
             style="height: 300px;"
           />
+          <div
+            id="bitcoin"
+            style="height: 300px"
+          />
         </div>
       </div>
     </div>
@@ -33,6 +37,16 @@
                 url: this.route('charts.my_payouts_chart'),
                 hooks: new ChartisanHooks()
                     .title('Your Payouts')
+                    .tooltip(true)
+                    .legend({ position: 'bottom' })
+                    .datasets([{ type: 'line', fill: false }]),
+            });
+
+            new Chartisan({
+                el: '#bitcoin',
+                url: this.route('charts.market_value_history'),
+                hooks: new ChartisanHooks()
+                    .title('Bitcoin Market Value')
                     .tooltip(true)
                     .legend({ position: 'bottom' })
                     .datasets([{ type: 'line', fill: false }]),

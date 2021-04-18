@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Charts\Bitcoin\MarketValueHistory;
 use App\Charts\Miners\Payouts\AllPayoutsChart;
 use App\Charts\Miners\Payouts\MyPayoutsChart;
 use App\Charts\MinerType\PriceHistoryChart;
@@ -34,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
             AllPayoutsChart::class,
             MyPayoutsChart::class,
             PriceHistoryChart::class,
+            MarketValueHistory::class,
         ]);
     }
 }
