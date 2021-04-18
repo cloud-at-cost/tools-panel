@@ -19,7 +19,10 @@ class MarketValueHistory extends BaseChart
     public function handler(Request $request): Chartisan
     {
         $marketValue = BitcoinMarketValue::latest('created_at')
-            ->get();
+            ->limit(180)
+            ->get()
+            ->sortBy('created_at')
+            ->values();
 
         return Chartisan::build()
             ->labels($marketValue
