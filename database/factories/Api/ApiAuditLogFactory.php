@@ -22,7 +22,9 @@ class ApiAuditLogFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => null,
+            'url' => $this->faker->url,
+            'parameters' => null,
         ];
     }
 }
