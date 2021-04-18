@@ -2,6 +2,7 @@
 
 namespace App\Services\CloudAtCost;
 
+use App\Models\Api\ApiAuditLog;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
@@ -40,6 +41,11 @@ class PanelClient
             $data['cid'] = $this->customer['id'];
         }
 
+        $this->logAction(
+            $url,
+            $data
+        );
+
         return $this->client->post(
             $this->buildUrl($url),
             [
@@ -60,6 +66,11 @@ class PanelClient
             $parameters['cid'] = $this->customer['id'];
         }
 
+        $this->logAction(
+            $url,
+            $parameters
+        );
+
         return $this->client->get(
             $this->buildUrl($url) . "?" . http_build_query($parameters),
             [
@@ -69,6 +80,15 @@ class PanelClient
         )->getBody()->getContents();
     }
 
+    private function logAction(string $url, array $body = null): void
+    {
+        ApiAuditLog::create([
+            'user_id' => optional(auth()->user())->id,
+            'url' => $url,
+            'parameters' => $body,
+        ]);
+    }
+
     private function login()
     {
         [$cookies, $this->customer] = cache()->remember(
@@ -76,6 +96,8 @@ class PanelClient
             now()->addMinutes(60),
             function() {
             $cookies = new CookieJar();
+
+            $this->logAction('manage-check2.php');
 
             $this->client
                 ->post(
@@ -90,8 +112,10 @@ class PanelClient
                     ]
                 );
 
+            $this->logAction('script');
+
             $script = $this->client
-                ->get($this->buildUrl('/script'), [
+                ->get($this->buildUrl('script'), [
                     'headers' => $this->headers,
                     'cookies' => $cookies,
                 ])
