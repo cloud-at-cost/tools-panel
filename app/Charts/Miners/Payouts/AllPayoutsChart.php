@@ -35,7 +35,7 @@ class AllPayoutsChart extends BaseChart
         $chart = Chartisan::build()
             ->labels($dates->toArray());
 
-        MinerType::orderBy('name')
+        $minerTypes = MinerType::orderBy('name')
             ->get()
             ->filter(function (MinerType $minerType) use ($request) {
                 if (empty($request->get('class'))) {
@@ -43,34 +43,57 @@ class AllPayoutsChart extends BaseChart
                 }
 
                 return $minerType->slug[0] === $request->get('class');
-            })
-            ->each(function (MinerType $minerType) use ($dates, $chart, $request, $startDate, $endDate) {
-                if (Miner::whereMinerTypeId($minerType->id)->count() < 2) {
-                    return;
-                }
-
-                $payouts = MinerPayout::forType($minerType)
-                    ->deposits()
-                    ->where('created_at', '>=', $startDate)
-                    ->where('created_at', '<=', $endDate)
-                    ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
-                    ->selectRaw('AVG(amount) AS amount')
-                    ->groupBy('created')
-                    ->get()
-                    ->keyBy('created');
-
-                if ($payouts->count() === 0) {
-                    return;
-                }
-
-                $data = [];
-
-                foreach ($dates as $key => $date) {
-                    $data[$key] = optional($payouts[$date] ?? null)->amount;
-                }
-
-                $chart->dataset($minerType->name, $data);
             });
+
+        $minerTypes->each(function (MinerType $minerType) use ($chart, $dates) {
+            $data = [];
+            $previous = null;
+
+            $payouts = $minerType->priceHistory()
+                ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d") as created')
+                ->selectRaw('AVG(bitcoins_per_month / 31.0 / 6.0 / 100000000) AS amount')
+                ->groupByRaw('DATE_FORMAT(created_at, "%Y-%m-%d")')
+                ->get()
+                ->keyBy('created');
+
+            foreach ($dates as $key => $date) {
+                $converted = Carbon::createFromFormat("Y-m-d H", $date)->toDateString();
+                $previous = $data[$key] = (optional($payouts[$converted] ?? null)->amount) ?? $previous;
+            }
+
+            $chart->dataset(
+                "{$minerType->name}: Bitcoin",
+                $data
+            );
+        });
+
+        $minerTypes->each(function (MinerType $minerType) use ($dates, $chart, $request, $startDate, $endDate) {
+            if (Miner::whereMinerTypeId($minerType->id)->count() < 2) {
+                return;
+            }
+
+            $payouts = MinerPayout::forType($minerType)
+                ->deposits()
+                ->where('created_at', '>=', $startDate)
+                ->where('created_at', '<=', $endDate)
+                ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H") as created')
+                ->selectRaw('AVG(amount) AS amount')
+                ->groupBy('created')
+                ->get()
+                ->keyBy('created');
+
+            if ($payouts->count() === 0) {
+                return;
+            }
+
+            $data = [];
+
+            foreach ($dates as $key => $date) {
+                $data[$key] = optional($payouts[$date] ?? null)->amount;
+            }
+
+            $chart->dataset($minerType->name, $data);
+        });
 
         return $chart;
     }

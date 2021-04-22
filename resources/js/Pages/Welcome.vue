@@ -339,7 +339,7 @@ export default {
 
     data: () => {
         const today = new Date();
-        const startDate = new Date(new Date().setDate(today.getDate()-30));
+        const startDate = new Date(new Date().setDate(today.getDate()-45));
 
         const pad = function(n, width, z) {
             z = z || '0';
