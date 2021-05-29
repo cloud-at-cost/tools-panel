@@ -38,6 +38,7 @@ class PayoutsController extends Controller
     public function store(Request $request)
     {
         $availableMiners = $request->user()->miners->keyBy('identifier');
+        $minerIds = $request->user()->miners->keyBy('identifier');
 
         $existing = 0;
         $new = 0;
@@ -45,10 +46,15 @@ class PayoutsController extends Controller
         $payouts = collect($request->input('payouts'))
             ->transform(fn($payout) => (object)$payout);
 
-        $validPayouts = $payouts->filter(fn($payout) => isset($availableMiners[$payout->packageID]));
+        $validPayouts = $payouts->filter(fn($payout) => isset($availableMiners[$payout->packageID]) || isset($minerIds[$payout->minerID]));
 
-        $validPayouts->each(function ($payout) use ($availableMiners, &$existing, &$new) {
-            $miner = $availableMiners[$payout->packageID];
+        $validPayouts->each(function ($payout) use ($availableMiners, $minerIds, &$existing, &$new) {
+            if(isset($availableMiners[$payout->packageID])) {
+                $miner = $availableMiners[$payout->packageID];
+            }
+            else {
+                $miner = $minerIds[$payout->minerID];
+            }
 
             $actual = $miner->payouts()
                 ->whereCreatedAt($payout->date)
