@@ -6,6 +6,7 @@ use App\Http\Resources\Miner\MinerPayoutCollection;
 use App\Models\Bitcoin\BitcoinMarketValue;
 use App\Models\Miner\MinerPayout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class PayoutsController extends Controller
@@ -59,8 +60,13 @@ class PayoutsController extends Controller
                 $miner = $minerIds[$payout->minerID];
             }
 
+            $date = Carbon::parse($payout->date)->format('Y-m-d H:i');
+
             $actual = $miner->payouts()
-                ->whereCreatedAt($payout->date)
+                ->whereRaw(
+                    'DATE_FORMAT(created_at, "%Y-%m-%d %H:%i") = ?',
+                    $date
+                )
                 ->whereType($payout->type)
                 ->firstOrNew();
 
@@ -70,7 +76,7 @@ class PayoutsController extends Controller
                 $new++;
             }
 
-            $actual->created_at = $payout->date;
+            $actual->created_at = $date;
             $actual->type = $payout->type;
             $actual->amount = $payout->amount;
 
