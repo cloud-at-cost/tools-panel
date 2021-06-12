@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Miner\MinerPayoutCollection;
 use App\Models\Bitcoin\BitcoinMarketValue;
+use App\Models\Miner;
 use App\Models\Miner\MinerPayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -96,5 +97,21 @@ class PayoutsController extends Controller
         return Inertia::location(
             route('payouts.index')
         );
+    }
+
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+        $total = 0;
+
+        $user->miners->each(
+            function(Miner $miner) use(&$total) {
+                $total += $miner->payouts()->delete();
+            }
+        );
+
+        return [
+            'removed' => $total,
+        ];
     }
 }

@@ -60,5 +60,7 @@ Route::group([
             ->name('payouts.create');
         Route::post('create', [PayoutsController::class, 'store'])
             ->name('payouts.store');
+        Route::delete('', [PayoutsController::class, 'destroy'])
+            ->name('payouts.destroy');
     });
 });
