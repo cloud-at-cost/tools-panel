@@ -45,11 +45,11 @@ class MinerType extends Model
 
     public function getCurrentBitcoinsPerMonthAttribute(): float
     {
-        return $this->priceHistory
+        return optional($this->priceHistory
             ->sortByDesc('created_at')
             ->values()
-            ->first()
-            ->bitcoins_per_month;
+            ->first())
+            ->bitcoins_per_month ?? 0;
     }
 
     public function getIsBaseModelAttribute(): bool
