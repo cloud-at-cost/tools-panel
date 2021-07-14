@@ -35,12 +35,6 @@ class UpdateRequest extends FormRequest
                     ->ignoreModel($this->route('miner'))
                     ->whereNull('deleted_at')
             ],
-            'identifier' => [
-                'required',
-                Rule::unique('miners', 'identifier')
-                    ->ignoreModel($this->route('miner'))
-                    ->whereNull('deleted_at')
-            ],
             'amount_paid' => [
                 'required',
                 'numeric',

@@ -29,7 +29,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Update Miner {{ miner.identifier }}
+              Update Miner {{ miner.miner_id }}
             </div>
           </li>
         </ol>
@@ -38,7 +38,7 @@
 
     <jet-form-section @submitted="update">
       <template #title>
-        Update Miner {{ miner.identifier }}
+        Update Miner {{ miner.miner_id }}
       </template>
 
       <template #description>
@@ -86,25 +86,6 @@
           />
           <jet-input-error
             :message="form.errors.miner_id"
-            class="mt-2"
-          />
-        </div>
-
-        <div class="col-span-6 sm:col-span-4">
-          <jet-label
-            for="identifier"
-            value="Package ID"
-          />
-          <jet-input
-            id="identifier"
-            ref="identifier"
-            v-model="form.identifier"
-            type="text"
-            class="mt-1 block w-full"
-            required
-          />
-          <jet-input-error
-            :message="form.errors.identifier"
             class="mt-2"
           />
         </div>
@@ -237,7 +218,6 @@
                 form: this.$inertia.form({
                     type: this.miner.type.slug,
                     miner_id: this.miner.miner_id,
-                    identifier: this.miner.identifier,
                     amount_paid: this.miner.amount_paid,
                     purchase_date: this.miner.purchase_date,
                     estimated_activation_date: this.miner.estimated_activation_date,
@@ -248,7 +228,7 @@
 
         computed: {
             canSubmit() {
-                return this.form.identifier && this.form.amount_paid;
+                return this.form.miner_id && this.form.amount_paid;
             }
         },
 

@@ -56,7 +56,7 @@ class MyPayoutsChart extends BaseChart
                 }
 
                 $chart->dataset(
-                    "{$miner->type->name}: {$miner->identifier}",
+                    "{$miner->type->name}: {$miner->miner_id}",
                     $data
                 );
 

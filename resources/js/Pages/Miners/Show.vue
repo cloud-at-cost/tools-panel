@@ -39,7 +39,6 @@
 
     <ul>
       <li><strong>Miner ID</strong>: {{ miner.miner_id }}</li>
-      <li><strong>Package ID</strong>: {{ miner.identifier }}</li>
       <li><strong>Amount Paid</strong>: {{ miner.amount_paid }}</li>
       <li><strong>Type</strong>: {{ miner.type.name }}</li>
       <li><strong>Purchase Date</strong>: {{ miner.purchase_date }}</li>
