@@ -82,6 +82,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <a
+                        v-if="payout.miner"
                         :href="route('miners.show', {
                           miner: payout.miner.hash
                         })"
@@ -89,9 +90,11 @@
                       >
                         {{ payout.miner.identifier }}
                       </a>
+                      <span v-else>N/A</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {{ payout.miner.type.name }}
+                      <span v-if="payout.miner">{{ payout.miner.type.name }}</span>
+                      <span v-else>N/A</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {{ payout.amount }}<br>

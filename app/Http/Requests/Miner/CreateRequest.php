@@ -34,11 +34,6 @@ class CreateRequest extends FormRequest
                 Rule::unique('miners', 'miner_id')
                     ->whereNull('deleted_at')
             ],
-            'identifier' => [
-                'required',
-                Rule::unique('miners', 'identifier')
-                    ->whereNull('deleted_at')
-            ],
             'amount_paid' => [
                 'required',
                 'numeric',

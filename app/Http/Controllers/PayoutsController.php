@@ -22,9 +22,14 @@ class PayoutsController extends Controller
             'Payouts/Index',
             [
                 'payouts' => new MinerPayoutCollection($payouts),
-                'total' => MinerPayout::forUser($request->user())
+                'total' => (
+                    MinerPayout::forUser($request->user())
                         ->deposits()
-                        ->sum('amount') / 100000000,
+                        ->sum('amount')
+                    - (MinerPayout::forUser($request->user())
+                        ->withdrawals()
+                        ->sum('amount') ?? 0)
+                ) / 100000000,
                 'conversion' => optional(BitcoinMarketValue::latest('created_at')->first())->price,
             ]
         );
