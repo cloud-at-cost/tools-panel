@@ -44,7 +44,6 @@ class PayoutsController extends Controller
 
     public function store(Request $request)
     {
-        $availableMiners = $request->user()->miners->keyBy('identifier');
         $minerIds = $request->user()->miners->keyBy('miner_id');
 
         $existing = 0;
@@ -53,18 +52,10 @@ class PayoutsController extends Controller
         $payouts = collect($request->input('payouts'))
             ->transform(fn($payout) => (object)$payout);
 
-        $validPayouts = $payouts->filter(fn($payout) => (
-            property_exists($payout, 'packageID') && isset($availableMiners[$payout->packageID]))
-            || isset($minerIds[$payout->minerID])
-        );
+        $validPayouts = $payouts->filter(fn($payout) => isset($minerIds[$payout->minerID]));
 
-        $validPayouts->each(function ($payout) use ($availableMiners, $minerIds, &$existing, &$new) {
-            if(property_exists($payout, 'packageID') && isset($availableMiners[$payout->packageID])) {
-                $miner = $availableMiners[$payout->packageID];
-            }
-            else {
-                $miner = $minerIds[$payout->minerID];
-            }
+        $validPayouts->each(function ($payout) use ($minerIds, &$existing, &$new) {
+            $miner = $minerIds[$payout->minerID];
 
             $date = Carbon::parse($payout->date)->format('Y-m-d H:i');
 
